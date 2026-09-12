@@ -54,67 +54,97 @@ Here is the folder structure of this app.
 
 <!--- FOLDER_STRUCTURE_START --->
 ```bash
-lingo/
-  |- actions/              # Server actions for data mutations
+lego-learn-and-go/
+  |- .agents/
+    |-- skills/
+  |- actions/
+    |-- ai.ts
     |-- challenge-progress.ts
+    |-- library.ts
+    |-- social.ts
+    |-- tutor.ts
     |-- user-progress.ts
     |-- user-subscription.ts
-  |- app/                  # Next.js app directory
-    |-- (auth)/           # Authentication routes
-    |-- (main)/           # Main application routes
-    |-- (marketing)/      # Marketing/landing pages
-    |-- admin/            # Admin dashboard
-    |-- api/              # API routes
-    |-- lesson/           # Lesson components and pages
-    |-- layout.tsx        # Root layout
-    |-- globals.css       # Global styles
-  |- components/           # React components
-    |-- modals/           # Modal components
-    |-- ui/               # UI components (shadcn/ui)
+  |- app/
+    |-- (auth)/
+    |-- (main)/
+    |-- (marketing)/
+    |-- admin/
+    |-- api/
+    |-- lesson/
+    |-- apple-icon.png
+    |-- favicon.ico
+    |-- globals.css
+    |-- icon1.png
+    |-- icon2.png
+    |-- layout.tsx
+  |- components/
+    |-- modals/
+    |-- ui/
     |-- banner.tsx
+    |-- bottom-navigation.tsx
+    |-- empty-state.tsx
     |-- feed-wrapper.tsx
+    |-- mascot.tsx
     |-- mobile-header.tsx
     |-- mobile-sidebar.tsx
+    |-- navigation.tsx
     |-- promo.tsx
     |-- quests.tsx
     |-- sidebar-item.tsx
     |-- sidebar.tsx
     |-- sticky-wrapper.tsx
     |-- user-progress.tsx
-  |- config/              # Configuration files
+  |- config/
     |-- index.ts
-  |- db/                  # Database configuration and schema
+  |- db/
     |-- drizzle.ts
     |-- queries.ts
     |-- schema.ts
-  |- lib/                 # Utility functions
+  |- drizzle/
+    |-- meta/
+    |-- 0000_puzzling_pete_wisdom.sql
+  |- lib/
+    |-- supabase/
     |-- admin.ts
+    |-- ai.ts
+    |-- badges.ts
     |-- stripe.ts
     |-- utils.ts
-  |- public/              # Static assets
-  |- scripts/             # Utility scripts
+  |- public/
+  |- scripts/
+    |-- generate-icons.ts
     |-- prod.ts
-  |- store/               # State management (Zustand)
+    |-- rls_migration.sql
+    |-- rls_policies.sql
+    |-- seed_courses.sql
+    |-- seed_full_data.sql
+    |-- setup_test_accounts.sql
+    |-- verify_rls.sql
+  |- store/
     |-- use-exit-modal.ts
     |-- use-hearts-modal.ts
     |-- use-practice-modal.ts
-  |- .env.example         # Environment variables template
+  |- .env.example
+  |- .env/.env.local
   |- .gitignore
   |- .prettierrc.json
-  |- components.json      # shadcn/ui configuration
-  |-- constants.ts
-  |-- drizzle.config.ts   # Drizzle ORM configuration
-  |-- environment.d.ts
-  |-- eslint.config.mjs
-  |-- next.config.ts
-  |-- package.json
-  |-- pnpm-lock.yaml
-  |-- pnpm-workspace.yaml
-  |-- postcss.config.js
-  |-- proxy.ts
-  |-- tailwind.config.ts
-  |-- tsconfig.json
-  |-- vercel.ts
+  |- components.json
+  |- constants.ts
+  |- drizzle.config.ts
+  |- environment.d.ts
+  |- eslint.config.mjs
+  |- next.config.ts
+  |- package-lock.json
+  |- package.json
+  |- pnpm-lock.yaml
+  |- pnpm-workspace.yaml
+  |- postcss.config.js
+  |- proxy.ts
+  |- skills-lock.json
+  |- tailwind.config.ts
+  |- tsconfig.json
+  |- vercel.ts
 ```
 <!--- FOLDER_STRUCTURE_END --->
 
