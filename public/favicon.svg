@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <!-- Background circle -->
+  <circle cx="50" cy="50" r="48" fill="#22C55E"/>
+  
+  <!-- Stylized L shape with rounded corners -->
+  <path d="M35 25 L35 65 Q35 75 45 75 L75 75" 
+        stroke="white" 
+        stroke-width="12" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+        fill="none"/>
+  
+  <!-- Progress node/dot on the L (representing learning progress) -->
+  <circle cx="75" cy="75" r="8" fill="#FEF08A" stroke="#22C55E" stroke-width="3"/>
+</svg>
