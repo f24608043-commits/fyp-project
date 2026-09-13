@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Save, Plus, Trash2 } from "lucide-react";
+import { ArrowLeft, Save, Plus, Trash2, Sparkles } from "lucide-react";
+import { generateLessonQuiz } from "@/actions/ai";
 
 type Challenge = {
   id?: number;
@@ -26,6 +27,7 @@ export default function AdminLessonEditorPage() {
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [generating, setGenerating] = useState(false);
   const [lesson, setLesson] = useState<any>(null);
   const [challenges, setChallenges] = useState<Challenge[]>([]);
 
@@ -180,6 +182,26 @@ export default function AdminLessonEditorPage() {
     }
   };
 
+  const handleGenerateAI = async () => {
+    if (!confirm("This will generate AI quiz questions for this lesson. Existing AI-generated questions will be replaced. Continue?")) {
+      return;
+    }
+
+    setGenerating(true);
+    try {
+      const result = await generateLessonQuiz(lessonId);
+      if (result.success) {
+        alert(`Successfully generated ${result.count} quiz questions!`);
+        await loadLessonData();
+      }
+    } catch (error) {
+      console.error("Error generating quiz:", error);
+      alert("Failed to generate quiz. Make sure OPENAI_API_KEY is configured.");
+    } finally {
+      setGenerating(false);
+    }
+  };
+
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
@@ -236,10 +258,16 @@ export default function AdminLessonEditorPage() {
         <div className="bg-white rounded-2xl border-2 border-slate-200 shadow-sm p-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-heading font-bold text-primary-900">Quiz Challenges</h2>
-            <Button onClick={addChallenge} variant="secondary" className="flex items-center gap-2">
-              <Plus className="w-4 h-4" />
-              Add Challenge
-            </Button>
+            <div className="flex gap-2">
+              <Button onClick={handleGenerateAI} disabled={generating} variant="secondary" className="flex items-center gap-2 bg-purple-500 hover:bg-purple-600 text-white">
+                <Sparkles className="w-4 h-4" />
+                {generating ? "Generating..." : "Generate with AI"}
+              </Button>
+              <Button onClick={addChallenge} variant="secondary" className="flex items-center gap-2">
+                <Plus className="w-4 h-4" />
+                Add Challenge
+              </Button>
+            </div>
           </div>
 
           {challenges.length === 0 ? (

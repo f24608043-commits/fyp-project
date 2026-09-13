@@ -1,12 +1,17 @@
 import { redirect } from "next/navigation";
-import { Calendar, Clock, Video, CheckCircle, XCircle, Clock as Pending } from "lucide-react";
+import { Calendar, Clock, Video, CheckCircle, XCircle, Clock as Pending, Filter } from "lucide-react";
 import { getUser } from "@/lib/supabase/server";
 import { getUserProgress } from "@/db/queries";
 import db from "@/db/drizzle";
 import { tutorSessions } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { CompleteSessionForm } from "./session-actions";
 
-const TutorSessionsPage = async () => {
+const TutorSessionsPage = async ({
+  searchParams,
+}: {
+  searchParams: { status?: string };
+}) => {
   const user = await getUser();
   if (!user) return redirect("/sign-in");
 
@@ -24,6 +29,11 @@ const TutorSessionsPage = async () => {
     orderBy: (tutorSessions, { desc }) => [desc(tutorSessions.scheduledAt)],
   });
 
+  // Filter by status if provided
+  const filteredSessions = searchParams.status
+    ? sessions.filter((s) => s.status === searchParams.status)
+    : sessions;
+
   const statusConfig = {
     requested: { icon: Pending, label: "Requested", color: "bg-yellow-100 text-yellow-700" },
     confirmed: { icon: Clock, label: "Confirmed", color: "bg-green-100 text-green-700" },
@@ -34,23 +44,77 @@ const TutorSessionsPage = async () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 p-6">
       <div className="max-w-6xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-heading font-extrabold text-primary-900">
-            Session History
-          </h1>
-          <p className="text-muted-foreground">
-            View all your tutoring sessions
-          </p>
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-3xl font-heading font-extrabold text-primary-900">
+              Session History
+            </h1>
+            <p className="text-muted-foreground">
+              View all your tutoring sessions
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <a
+              href="/tutor/sessions"
+              className={`px-4 py-2 rounded-xl text-sm font-bold transition-colors ${
+                !searchParams.status
+                  ? "bg-primary-500 text-white"
+                  : "bg-white border-2 border-slate-200 text-muted-foreground hover:border-primary-300"
+              }`}
+            >
+              All
+            </a>
+            <a
+              href="/tutor/sessions?status=requested"
+              className={`px-4 py-2 rounded-xl text-sm font-bold transition-colors ${
+                searchParams.status === "requested"
+                  ? "bg-yellow-500 text-white"
+                  : "bg-white border-2 border-slate-200 text-muted-foreground hover:border-primary-300"
+              }`}
+            >
+              Requested
+            </a>
+            <a
+              href="/tutor/sessions?status=confirmed"
+              className={`px-4 py-2 rounded-xl text-sm font-bold transition-colors ${
+                searchParams.status === "confirmed"
+                  ? "bg-green-500 text-white"
+                  : "bg-white border-2 border-slate-200 text-muted-foreground hover:border-primary-300"
+              }`}
+            >
+              Confirmed
+            </a>
+            <a
+              href="/tutor/sessions?status=completed"
+              className={`px-4 py-2 rounded-xl text-sm font-bold transition-colors ${
+                searchParams.status === "completed"
+                  ? "bg-blue-500 text-white"
+                  : "bg-white border-2 border-slate-200 text-muted-foreground hover:border-primary-300"
+              }`}
+            >
+              Completed
+            </a>
+            <a
+              href="/tutor/sessions?status=cancelled"
+              className={`px-4 py-2 rounded-xl text-sm font-bold transition-colors ${
+                searchParams.status === "cancelled"
+                  ? "bg-red-500 text-white"
+                  : "bg-white border-2 border-slate-200 text-muted-foreground hover:border-primary-300"
+              }`}
+            >
+              Cancelled
+            </a>
+          </div>
         </div>
 
         <div className="bg-white rounded-2xl border-2 border-slate-200 shadow-sm p-6">
-          {sessions.length === 0 ? (
+          {filteredSessions.length === 0 ? (
             <p className="text-muted-foreground py-8 text-center">
               No sessions found.
             </p>
           ) : (
             <div className="space-y-4">
-              {sessions.map((session) => {
+              {filteredSessions.map((session) => {
                 const config = statusConfig[session.status as keyof typeof statusConfig];
                 const StatusIcon = config.icon;
 
@@ -83,10 +147,15 @@ const TutorSessionsPage = async () => {
                         )}
                       </div>
                     </div>
-                    <span className={`px-3 py-1 ${config.color} text-sm font-bold rounded-full flex items-center gap-2`}>
-                      <StatusIcon className="w-4 h-4" />
-                      {config.label}
-                    </span>
+                    <div className="flex items-center gap-3">
+                      <span className={`px-3 py-1 ${config.color} text-sm font-bold rounded-full flex items-center gap-2`}>
+                        <StatusIcon className="w-4 h-4" />
+                        {config.label}
+                      </span>
+                      {session.status === "confirmed" && (
+                        <CompleteSessionForm sessionId={session.id} />
+                      )}
+                    </div>
                   </div>
                 );
               })}

@@ -1,5 +1,5 @@
 ﻿import { redirect } from "next/navigation";
-import { getLibraryLessons, getUserProgress } from "@/db/queries";
+import { getLibraryLessons } from "@/db/queries";
 import { getUser } from "@/lib/supabase/server";
 import { LibraryClient } from "./library-client";
 
@@ -7,7 +7,6 @@ export default async function LibraryPage() {
   const user = await getUser();
   if (!user) return redirect("/sign-in");
 
-  const userProgress = await getUserProgress();
   const lessons = await getLibraryLessons();
 
   return (

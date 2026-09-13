@@ -46,40 +46,47 @@ export const getUnits = cache(async () => {
 
   if (!user || !currentProgress?.activeCourseId) return [];
 
+  // Fetch units with lessons only - don't fetch challenges yet
   const data = await db.query.units.findMany({
     where: eq(units.courseId, currentProgress.activeCourseId),
     orderBy: (units, { asc }) => [asc(units.order)],
     with: {
       lessons: {
         orderBy: (lessons, { asc }) => [asc(lessons.order)],
-        with: {
-          challenges: {
-            orderBy: (challenges, { asc }) => [asc(challenges.order)],
-            with: {
-              challengeProgress: {
-                where: eq(challengeProgress.userId, user.id),
-              },
-            },
-          },
+        columns: {
+          id: true,
+          title: true,
+          unitId: true,
+          order: true,
+          youtubeVideoId: true,
         },
       },
     },
   });
 
+  // Fetch challenge progress separately for better performance
+  const allChallengeProgress = await db.query.challengeProgress.findMany({
+    where: eq(challengeProgress.userId, user.id),
+  });
+
+  const completedChallengeIds = new Set(
+    allChallengeProgress
+      .filter((cp) => cp.completed)
+      .map((cp) => cp.challengeId)
+  );
+
+  // Fetch challenges for all lessons in one query
+  const lessonIds = data.flatMap((unit) => unit.lessons.map((l) => l.id));
+  const allChallenges = await db.query.challenges.findMany({
+    where: (challenges, { inArray }) => inArray(challenges.lessonId, lessonIds),
+    orderBy: (challenges, { asc }) => [asc(challenges.order)],
+  });
+
   const normalizedData = data.map((unit) => {
     const lessonsWithCompletedStatus = unit.lessons.map((lesson) => {
-      if (lesson.challenges.length === 0)
-        return { ...lesson, completed: false };
-
-      const allCompletedChallenges = lesson.challenges.every((challenge) => {
-        return (
-          challenge.challengeProgress &&
-          challenge.challengeProgress.length > 0 &&
-          challenge.challengeProgress.every((progress) => progress.completed)
-        );
-      });
-
-      return { ...lesson, completed: allCompletedChallenges };
+      const lessonChallenges = allChallenges.filter((c) => c.lessonId === lesson.id);
+      const allCompleted = lessonChallenges.every((c) => completedChallengeIds.has(c.id));
+      return { ...lesson, completed: allCompleted, challenges: lessonChallenges };
     });
 
     return { ...unit, lessons: lessonsWithCompletedStatus };
@@ -112,36 +119,45 @@ export const getCourseProgress = cache(async () => {
 
   if (!user || !currentProgress?.activeCourseId) return null;
 
+  // Fetch units with lessons only
   const unitsInActiveCourse = await db.query.units.findMany({
     orderBy: (units, { asc }) => [asc(units.order)],
     where: eq(units.courseId, currentProgress.activeCourseId),
     with: {
       lessons: {
         orderBy: (lessons, { asc }) => [asc(lessons.order)],
-        with: {
-          unit: true,
-          challenges: {
-            with: {
-              challengeProgress: {
-                where: eq(challengeProgress.userId, user.id),
-              },
-            },
-          },
+        columns: {
+          id: true,
+          title: true,
+          unitId: true,
+          order: true,
         },
       },
     },
   });
 
+  // Fetch challenge progress separately
+  const allChallengeProgress = await db.query.challengeProgress.findMany({
+    where: eq(challengeProgress.userId, user.id),
+  });
+
+  const completedChallengeIds = new Set(
+    allChallengeProgress
+      .filter((cp) => cp.completed)
+      .map((cp) => cp.challengeId)
+  );
+
+  // Fetch challenges for all lessons
+  const lessonIds = unitsInActiveCourse.flatMap((unit) => unit.lessons.map((l) => l.id));
+  const allChallenges = await db.query.challenges.findMany({
+    where: (challenges, { inArray }) => inArray(challenges.lessonId, lessonIds),
+  });
+
   const firstUncompletedLesson = unitsInActiveCourse
     .flatMap((unit) => unit.lessons)
     .find((lesson) => {
-      return lesson.challenges.some((challenge) => {
-        return (
-          !challenge.challengeProgress ||
-          challenge.challengeProgress.length === 0 ||
-          challenge.challengeProgress.some((progress) => !progress.completed)
-        );
-      });
+      const lessonChallenges = allChallenges.filter((c) => c.lessonId === lesson.id);
+      return lessonChallenges.some((c) => !completedChallengeIds.has(c.id));
     });
 
   return {

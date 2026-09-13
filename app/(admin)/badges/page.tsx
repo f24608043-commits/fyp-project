@@ -14,6 +14,8 @@ type Badge = {
   criteria: any;
 };
 
+type CriteriaType = "lessons_completed" | "streak_days" | "points_earned" | "custom";
+
 export default function AdminBadgesPage() {
   const router = useRouter();
   const supabase = createClient();
@@ -21,6 +23,7 @@ export default function AdminBadgesPage() {
   const [badges, setBadges] = useState<Badge[]>([]);
   const [editingBadge, setEditingBadge] = useState<Badge | null>(null);
   const [saving, setSaving] = useState(false);
+  const [criteriaType, setCriteriaType] = useState<CriteriaType>("custom");
 
   useEffect(() => {
     loadBadges();
@@ -65,12 +68,49 @@ export default function AdminBadgesPage() {
       }
 
       setEditingBadge(null);
+      setCriteriaType("custom");
       await loadBadges();
     } catch (error) {
       console.error("Error saving badge:", error);
       alert("Failed to save badge");
     } finally {
       setSaving(false);
+    }
+  };
+
+  const updateCriteria = (type: CriteriaType, value: any) => {
+    let criteria: any = {};
+    switch (type) {
+      case "lessons_completed":
+        criteria = { type: "lessons_completed", count: parseInt(value) || 0 };
+        break;
+      case "streak_days":
+        criteria = { type: "streak_days", days: parseInt(value) || 0 };
+        break;
+      case "points_earned":
+        criteria = { type: "points_earned", points: parseInt(value) || 0 };
+        break;
+      case "custom":
+        try {
+          criteria = JSON.parse(value);
+        } catch {
+          criteria = {};
+        }
+        break;
+    }
+    if (editingBadge) {
+      setEditingBadge({ ...editingBadge, criteria });
+    }
+  };
+
+  const openEditModal = (badge?: Badge) => {
+    if (badge) {
+      setEditingBadge(badge);
+      const criteriaTypeFromBadge = badge.criteria?.type || "custom";
+      setCriteriaType(criteriaTypeFromBadge as CriteriaType);
+    } else {
+      setEditingBadge({ name: "", description: "", iconUrl: "/mascot.svg", criteria: {} });
+      setCriteriaType("custom");
     }
   };
 
@@ -102,7 +142,7 @@ export default function AdminBadgesPage() {
               Create and manage achievement badges
             </p>
           </div>
-          <Button onClick={() => setEditingBadge({ name: "", description: "", iconUrl: "/mascot.svg", criteria: {} })} variant="secondary" className="flex items-center gap-2">
+          <Button onClick={() => openEditModal()} variant="secondary" className="flex items-center gap-2">
             <Plus className="w-4 h-4" />
             Add Badge
           </Button>
@@ -144,20 +184,68 @@ export default function AdminBadgesPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-neutral-600 mb-1">Criteria (JSON)</label>
-                  <textarea
-                    value={JSON.stringify(editingBadge.criteria, null, 2)}
-                    onChange={(e) => {
-                      try {
-                        setEditingBadge({ ...editingBadge, criteria: JSON.parse(e.target.value) });
-                      } catch {
-                        // Invalid JSON, ignore
-                      }
-                    }}
-                    className="w-full px-4 py-2 border-2 border-slate-200 rounded-xl focus:border-primary-500 focus:outline-none font-mono text-sm"
-                    rows={4}
-                  />
+                  <label className="block text-sm font-semibold text-neutral-600 mb-1">Criteria Type</label>
+                  <select
+                    value={criteriaType}
+                    onChange={(e) => setCriteriaType(e.target.value as CriteriaType)}
+                    className="w-full px-4 py-2 border-2 border-slate-200 rounded-xl focus:border-primary-500 focus:outline-none"
+                  >
+                    <option value="custom">Custom (JSON)</option>
+                    <option value="lessons_completed">Lessons Completed</option>
+                    <option value="streak_days">Streak Days</option>
+                    <option value="points_earned">Points Earned</option>
+                  </select>
                 </div>
+                {criteriaType === "lessons_completed" && (
+                  <div>
+                    <label className="block text-sm font-semibold text-neutral-600 mb-1">Number of Lessons</label>
+                    <input
+                      type="number"
+                      value={editingBadge.criteria?.count || 0}
+                      onChange={(e) => updateCriteria("lessons_completed", e.target.value)}
+                      className="w-full px-4 py-2 border-2 border-slate-200 rounded-xl focus:border-primary-500 focus:outline-none"
+                    />
+                  </div>
+                )}
+                {criteriaType === "streak_days" && (
+                  <div>
+                    <label className="block text-sm font-semibold text-neutral-600 mb-1">Number of Days</label>
+                    <input
+                      type="number"
+                      value={editingBadge.criteria?.days || 0}
+                      onChange={(e) => updateCriteria("streak_days", e.target.value)}
+                      className="w-full px-4 py-2 border-2 border-slate-200 rounded-xl focus:border-primary-500 focus:outline-none"
+                    />
+                  </div>
+                )}
+                {criteriaType === "points_earned" && (
+                  <div>
+                    <label className="block text-sm font-semibold text-neutral-600 mb-1">Number of Points</label>
+                    <input
+                      type="number"
+                      value={editingBadge.criteria?.points || 0}
+                      onChange={(e) => updateCriteria("points_earned", e.target.value)}
+                      className="w-full px-4 py-2 border-2 border-slate-200 rounded-xl focus:border-primary-500 focus:outline-none"
+                    />
+                  </div>
+                )}
+                {criteriaType === "custom" && (
+                  <div>
+                    <label className="block text-sm font-semibold text-neutral-600 mb-1">Criteria (JSON)</label>
+                    <textarea
+                      value={JSON.stringify(editingBadge.criteria, null, 2)}
+                      onChange={(e) => {
+                        try {
+                          setEditingBadge({ ...editingBadge, criteria: JSON.parse(e.target.value) });
+                        } catch {
+                          // Invalid JSON, ignore
+                        }
+                      }}
+                      className="w-full px-4 py-2 border-2 border-slate-200 rounded-xl focus:border-primary-500 focus:outline-none font-mono text-sm"
+                      rows={4}
+                    />
+                  </div>
+                )}
               </div>
               <div className="flex justify-end gap-2 mt-6">
                 <Button variant="ghost" onClick={() => setEditingBadge(null)}>Cancel</Button>
@@ -187,7 +275,7 @@ export default function AdminBadgesPage() {
                       <Award className="w-8 h-8 text-accent-600" />
                     </div>
                     <div className="flex gap-2">
-                      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setEditingBadge(badge)}>
+                      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openEditModal(badge)}>
                         <Edit className="w-4 h-4" />
                       </Button>
                       <Button variant="ghost" size="icon" className="h-8 w-8 text-red-500" onClick={() => handleDelete(badge.id!)}>

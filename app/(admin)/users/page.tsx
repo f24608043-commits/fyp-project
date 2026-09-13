@@ -14,6 +14,7 @@ type UserProfile = {
   role: UserRole;
   points: number;
   hearts: number;
+  lastActiveDate?: string;
 };
 
 export default function AdminUsersPage() {
@@ -118,6 +119,7 @@ export default function AdminUsersPage() {
                     <th className="text-left px-6 py-4 text-sm font-semibold text-neutral-600">Role</th>
                     <th className="text-left px-6 py-4 text-sm font-semibold text-neutral-600">Points</th>
                     <th className="text-left px-6 py-4 text-sm font-semibold text-neutral-600">Hearts</th>
+                    <th className="text-left px-6 py-4 text-sm font-semibold text-neutral-600">Last Active</th>
                     <th className="text-left px-6 py-4 text-sm font-semibold text-neutral-600">Actions</th>
                   </tr>
                 </thead>
@@ -144,6 +146,9 @@ export default function AdminUsersPage() {
                         </td>
                         <td className="px-6 py-4 text-sm text-neutral-600">{user.points || 0}</td>
                         <td className="px-6 py-4 text-sm text-neutral-600">{user.hearts || 0}</td>
+                        <td className="px-6 py-4 text-sm text-neutral-600">
+                          {user.lastActiveDate ? new Date(user.lastActiveDate).toLocaleDateString() : "Never"}
+                        </td>
                         <td className="px-6 py-4">
                           <div className="flex gap-2">
                             <select
