@@ -11,7 +11,7 @@ import { PlayCircle } from "lucide-react";
 import { upsertChallengeProgress } from "@/actions/challenge-progress";
 import { reduceHearts } from "@/actions/user-progress";
 import { MAX_HEARTS } from "@/constants";
-import { challengeOptions, challenges, userSubscription } from "@/db/schema";
+import { challengeOptions, challenges } from "@/db/schema";
 import { useHeartsModal } from "@/store/use-hearts-modal";
 import { usePracticeModal } from "@/store/use-practice-modal";
 import { Button } from "@/components/ui/button";
@@ -32,11 +32,6 @@ type QuizProps = {
     completed: boolean;
     challengeOptions: (typeof challengeOptions.$inferSelect)[];
   })[];
-  userSubscription:
-    | (typeof userSubscription.$inferSelect & {
-        isActive: boolean;
-      })
-    | null;
 };
 
 export const Quiz = ({
@@ -46,7 +41,6 @@ export const Quiz = ({
   lessonTitle,
   youtubeVideoId,
   initialLessonChallenges,
-  userSubscription,
 }: QuizProps) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [correctAudio, _c, correctControls] = useAudio({ src: "/correct.wav" });
@@ -162,7 +156,6 @@ export const Quiz = ({
         <Header
           hearts={hearts}
           percentage={percentage}
-          hasActiveSubscription={!!userSubscription?.isActive}
         />
         <div className="flex-1 flex flex-col items-center justify-center p-4 max-w-4xl mx-auto w-full space-y-8">
           <div className="text-center space-y-3">
@@ -234,14 +227,14 @@ export const Quiz = ({
             <ResultCard variant="points" value={challengesList.length * 10} />
             <ResultCard
               variant="hearts"
-              value={userSubscription?.isActive ? Infinity : hearts}
+              value={hearts}
             />
           </div>
         </div>
         <Footer
           lessonId={lessonId}
           status="completed"
-          onCheck={() => router.push("/learn")}
+          onCheck={() => router.push("/path")}
         />
       </>
     );
@@ -259,7 +252,6 @@ export const Quiz = ({
       <Header
         hearts={hearts}
         percentage={percentage}
-        hasActiveSubscription={!!userSubscription?.isActive}
       />
       <div className="flex-1 bg-gradient-to-br from-primary-50 via-white to-secondary-50">
         <div className="flex h-full items-center justify-center p-4">

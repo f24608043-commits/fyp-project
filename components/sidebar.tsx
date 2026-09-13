@@ -30,22 +30,21 @@ export const Sidebar = ({ className }: SidebarProps) => {
         className
       )}
     >
-      <Link href="/learn" prefetch>
+      <Link href="/path" prefetch>
         <div className="flex items-center gap-x-3 pb-7 pl-4 pt-8">
           <Image src="/mascot.svg" alt="Mascot" height={40} width={40} />
           <h1 className="text-2xl font-extrabold tracking-wide text-green-600">
-            SocialLearn
+            LEGO
           </h1>
         </div>
       </Link>
 
       <div className="flex flex-1 flex-col gap-y-2">
-        <SidebarItem label="Path" href="/learn" iconSrc="/learn.svg" />
+        <SidebarItem label="Path" href="/path" iconSrc="/learn.svg" />
         <SidebarItem label="Library" href="/library" iconSrc="/quests.svg" />
-        <SidebarItem label="Live Classes" href="/live" iconSrc="/leaderboard.svg" />
+        <SidebarItem label="Live Classes" href="/live-classes" iconSrc="/leaderboard.svg" />
         <SidebarItem label="Leaderboard" href="/leaderboard" iconSrc="/leaderboard.svg" />
         <SidebarItem label="Profile" href="/profile" iconSrc="/mascot.svg" />
-        <SidebarItem label="Shop" href="/shop" iconSrc="/shop.svg" />
       </div>
 
       <div className="p-4 border-t border-slate-100 flex flex-col gap-2">

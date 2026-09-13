@@ -5,11 +5,10 @@ import { revalidatePath } from "next/cache";
 
 import { MAX_HEARTS } from "@/constants";
 import db from "@/db/drizzle";
-import { getUserProgress, getUserSubscription } from "@/db/queries";
+import { getUserProgress } from "@/db/queries";
 import {
   challengeProgress,
   challenges,
-  courseProgress,
   friendships,
   friendStreaks,
   lessons,
@@ -23,7 +22,6 @@ export const upsertChallengeProgress = async (challengeId: number) => {
   if (!user) throw new Error("Unauthorized.");
 
   const currentUserProgress = await getUserProgress();
-  const userSubscription = await getUserSubscription();
 
   if (!currentUserProgress) throw new Error("User progress not found.");
 
@@ -43,11 +41,7 @@ export const upsertChallengeProgress = async (challengeId: number) => {
 
   const isPractice = !!existingChallengeProgress;
 
-  if (
-    currentUserProgress.hearts === 0 &&
-    !isPractice &&
-    !userSubscription?.isActive
-  ) {
+  if (currentUserProgress.hearts === 0 && !isPractice) {
     return { error: "hearts" };
   }
 
@@ -125,30 +119,8 @@ export const upsertChallengeProgress = async (challengeId: number) => {
   );
 
   if (completedLessonChallenges.length === allLessonChallenges.length && allLessonChallenges.length > 0) {
-    // Lesson fully completed - unlock next lesson
-    const currentLesson = await db.query.lessons.findFirst({
-      where: eq(lessons.id, lessonId),
-    });
-    if (currentLesson) {
-      const nextLesson = await db.query.lessons.findFirst({
-        where: and(
-          eq(lessons.unitId, currentLesson.unitId),
-          eq(lessons.order, currentLesson.order + 1)
-        ),
-      });
-      if (nextLesson) {
-        // Update courseProgress to set next lesson as active
-        const courseProgress = await db.query.courseProgress.findFirst({
-          where: eq(courseProgress.userId, user.id),
-        });
-        if (courseProgress) {
-          await db
-            .update(courseProgress)
-            .set({ activeLessonId: nextLesson.id })
-            .where(eq(courseProgress.id, courseProgress.id));
-        }
-      }
-    }
+    // Lesson fully completed - unlock next lesson logic can be added later
+    // when activeLessonId field is added to userProgress schema
   }
 
   // Update Friend Streaks if active on same day
@@ -191,7 +163,7 @@ export const upsertChallengeProgress = async (challengeId: number) => {
     console.error("Error updating friend streaks:", err);
   }
 
-  revalidatePath("/learn");
+  revalidatePath("/path");
   revalidatePath("/lesson");
   revalidatePath("/quests");
   revalidatePath("/leaderboard");

@@ -20,16 +20,24 @@ export default function SignInPage() {
     setLoading(true);
     setError(null);
 
-    const { error } = await supabase.auth.signInWithPassword({
+    console.log("Attempting sign in with:", email);
+
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
+    console.log("Sign in result:", { data, error });
+
     if (error) {
+      console.error("Sign in error:", error);
       setError(error.message);
       setLoading(false);
     } else {
-      router.push("/learn");
+      console.log("Sign in successful, redirecting to /path");
+      // Wait a moment for auth state to be set
+      await new Promise(resolve => setTimeout(resolve, 500));
+      router.push("/path");
       router.refresh();
     }
   };

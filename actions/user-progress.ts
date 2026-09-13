@@ -9,7 +9,6 @@ import db from "@/db/drizzle";
 import {
   getCourseById,
   getUserProgress,
-  getUserSubscription,
 } from "@/db/queries";
 import { challengeProgress, challenges, enrollments, userProgress } from "@/db/schema";
 import { getUser } from "@/lib/supabase/server";
@@ -45,8 +44,8 @@ export const upsertUserProgress = async (courseId: number) => {
     }
 
     revalidatePath("/courses");
-    revalidatePath("/learn");
-    redirect("/learn");
+    revalidatePath("/path");
+    redirect("/path");
   }
 
   await db.insert(userProgress).values({
@@ -63,8 +62,8 @@ export const upsertUserProgress = async (courseId: number) => {
   });
 
   revalidatePath("/courses");
-  revalidatePath("/learn");
-  redirect("/learn");
+  revalidatePath("/path");
+  redirect("/path");
 };
 
 export const updateProfile = async ({
@@ -97,7 +96,6 @@ export const reduceHearts = async (challengeId: number) => {
   if (!user) throw new Error("Unauthorized.");
 
   const currentUserProgress = await getUserProgress();
-  const userSubscription = await getUserSubscription();
 
   const challenge = await db.query.challenges.findFirst({
     where: eq(challenges.id, challengeId),
@@ -116,7 +114,6 @@ export const reduceHearts = async (challengeId: number) => {
   const isPractice = !!existingChallengeProgress;
   if (isPractice) return { error: "practice" };
   if (!currentUserProgress) throw new Error("User progress not found.");
-  if (userSubscription?.isActive) return { error: "subscription" };
   if (currentUserProgress.hearts === 0) return { error: "hearts" };
 
   await db
@@ -126,8 +123,7 @@ export const reduceHearts = async (challengeId: number) => {
     })
     .where(eq(userProgress.userId, user.id));
 
-  revalidatePath("/shop");
-  revalidatePath("/learn");
+  revalidatePath("/path");
   revalidatePath("/quests");
   revalidatePath("/leaderboard");
   revalidatePath(`/lesson/${lessonId}`);
@@ -152,8 +148,7 @@ export const refillHearts = async () => {
     })
     .where(eq(userProgress.userId, user.id));
 
-  revalidatePath("/shop");
-  revalidatePath("/learn");
+  revalidatePath("/path");
   revalidatePath("/quests");
   revalidatePath("/leaderboard");
 };

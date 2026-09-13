@@ -1,4 +1,4 @@
-import { InfinityIcon, X } from "lucide-react";
+import { X } from "lucide-react";
 import Image from "next/image";
 
 import { Progress } from "@/components/ui/progress";
@@ -7,13 +7,11 @@ import { useExitModal } from "@/store/use-exit-modal";
 type HeaderProps = {
   hearts: number;
   percentage: number;
-  hasActiveSubscription: boolean;
 };
 
 export const Header = ({
   hearts,
   percentage,
-  hasActiveSubscription,
 }: HeaderProps) => {
   const { open } = useExitModal();
 
@@ -34,11 +32,7 @@ export const Header = ({
           alt="Heart"
           className="mr-2"
         />
-        {hasActiveSubscription ? (
-          <InfinityIcon className="h-6 w-6 shrink-0 stroke-[3]" />
-        ) : (
-          hearts
-        )}
+        {hearts}
       </div>
     </header>
   );

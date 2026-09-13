@@ -13,10 +13,10 @@ export const generateLessonQuiz = async (lessonId: number) => {
   if (!user) throw new Error("Unauthorized.");
 
   // Role check: Only admins can generate AI quizzes
-  const userProgress = await db.query.userProgress.findFirst({
+  const currentUserProgress = await db.query.userProgress.findFirst({
     where: eq(userProgress.userId, user.id),
   });
-  if (!userProgress || userProgress.role !== "admin") {
+  if (!currentUserProgress || currentUserProgress.role !== "admin") {
     throw new Error("Forbidden: Admin role required.");
   }
 
@@ -74,6 +74,6 @@ export const generateLessonQuiz = async (lessonId: number) => {
   }
 
   revalidatePath(`/lesson/${lessonId}`);
-  revalidatePath("/learn");
+  revalidatePath("/path");
   return { success: true, count: generated.questions.length };
 };

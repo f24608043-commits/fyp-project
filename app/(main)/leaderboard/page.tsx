@@ -2,22 +2,19 @@
 import { redirect } from "next/navigation";
 
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { getUserProgress, getTopTenUsers, getUserSubscription } from "@/db/queries";
+import { getUserProgress, getTopTenUsers } from "@/db/queries";
 import { getUser } from "@/lib/supabase/server";
 
 const LeaderboardPage = async () => {
   const user = await getUser();
   if (!user) return redirect("/sign-in");
 
-  const [userProgress, userSubscription, leaderboard] = await Promise.all([
+  const [userProgress, leaderboard] = await Promise.all([
     getUserProgress(),
-    getUserSubscription(),
     getTopTenUsers(),
   ]);
 
   if (!userProgress || !userProgress.activeCourse) return redirect("/courses");
-
-  const isPro = !!userSubscription?.isActive;
 
   const getRankIcon = (rank: number) => {
     if (rank === 0) return "🥇";
@@ -47,7 +44,7 @@ const LeaderboardPage = async () => {
       </div>
 
       <div className="space-y-4">
-        {leaderboard.map((item, i) => {
+        {leaderboard.map((item: any, i: number) => {
           const RankChangeIcon = getRankChange(i);
           const isCurrentUser = item.userId === userProgress.userId;
           

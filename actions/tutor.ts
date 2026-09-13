@@ -4,7 +4,7 @@ import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 import db from "@/db/drizzle";
-import { tutorAvailability, tutorSessions, userProgress as userProgressTable } from "@/db/schema";
+import { tutorAvailability, tutorSessions, userProgress } from "@/db/schema";
 import { getUser } from "@/lib/supabase/server";
 
 export const bookTutorSession = async ({
@@ -20,16 +20,16 @@ export const bookTutorSession = async ({
   if (!user) throw new Error("Unauthorized.");
 
   // Role check: Only learners can book sessions
-  const currentUserProgress = await db.query.userProgressTable.findFirst({
-    where: eq(userProgressTable.userId, user.id),
+  const currentUserProgress = await db.query.userProgress.findFirst({
+    where: eq(userProgress.userId, user.id),
   });
   if (!currentUserProgress || currentUserProgress.role !== "learner") {
     throw new Error("Forbidden: Only learners can book sessions.");
   }
 
   // Verify tutor exists and has tutor role
-  const tutorProgress = await db.query.userProgressTable.findFirst({
-    where: eq(userProgressTable.userId, tutorId),
+  const tutorProgress = await db.query.userProgress.findFirst({
+    where: eq(userProgress.userId, tutorId),
   });
   if (!tutorProgress || tutorProgress.role !== "tutor") {
     throw new Error("Invalid tutor.");
@@ -50,7 +50,7 @@ export const bookTutorSession = async ({
     })
     .returning();
 
-  revalidatePath("/live");
+  revalidatePath("/live-classes");
   return { success: true, session: session[0] };
 };
 
@@ -65,8 +65,8 @@ export const updateTutorSessionStatus = async ({
   if (!user) throw new Error("Unauthorized.");
 
   // Role check: Only tutors can update session status
-  const currentUserProgress = await db.query.userProgressTable.findFirst({
-    where: eq(userProgressTable.userId, user.id),
+  const currentUserProgress = await db.query.userProgress.findFirst({
+    where: eq(userProgress.userId, user.id),
   });
   if (!currentUserProgress || currentUserProgress.role !== "tutor") {
     throw new Error("Forbidden: Only tutors can update session status.");
@@ -85,7 +85,7 @@ export const updateTutorSessionStatus = async ({
     .set({ status })
     .where(and(eq(tutorSessions.id, sessionId), eq(tutorSessions.tutorId, user.id)));
 
-  revalidatePath("/live");
+  revalidatePath("/live-classes");
   return { success: true };
 };
 
@@ -102,8 +102,8 @@ export const setTutorAvailability = async ({
   if (!user) throw new Error("Unauthorized.");
 
   // Role check: Only tutors can set availability
-  const currentUserProgress = await db.query.userProgressTable.findFirst({
-    where: eq(userProgressTable.userId, user.id),
+  const currentUserProgress = await db.query.userProgress.findFirst({
+    where: eq(userProgress.userId, user.id),
   });
   if (!currentUserProgress || currentUserProgress.role !== "tutor") {
     throw new Error("Forbidden: Only tutors can set availability.");
@@ -116,6 +116,6 @@ export const setTutorAvailability = async ({
     endTime,
   });
 
-  revalidatePath("/live");
+  revalidatePath("/live-classes");
   return { success: true };
 };

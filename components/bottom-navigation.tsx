@@ -6,9 +6,9 @@ import { BookOpen, Compass, Flame, GraduationCap, Trophy, User } from "lucide-re
 import { cn } from "@/lib/utils";
 
 const items = [
-  { label: "Path", href: "/learn", icon: Compass },
+  { label: "Path", href: "/path", icon: Compass },
   { label: "Library", href: "/library", icon: BookOpen },
-  { label: "Live Classes", href: "/live", icon: GraduationCap },
+  { label: "Live Classes", href: "/live-classes", icon: GraduationCap },
   { label: "Leaderboard", href: "/leaderboard", icon: Trophy },
   { label: "Profile", href: "/profile", icon: User },
 ];

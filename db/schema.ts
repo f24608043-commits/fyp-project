@@ -172,15 +172,6 @@ export const userProgressRelations = relations(userProgress, ({ one, many }) => 
   enrollments: many(enrollments),
 }));
 
-export const userSubscription = pgTable("user_subscription", {
-  id: serial("id").primaryKey(),
-  userId: text("user_id").notNull().unique(),
-  stripeCustomerId: text("stripe_customer_id").unique(),
-  stripeSubscriptionId: text("stripe_subscription_id").unique(),
-  stripePriceId: text("stripe_price_id"),
-  stripeCurrentPeriodEnd: timestamp("stripe_current_period_end"),
-});
-
 // Badges
 export const badges = pgTable("badges", {
   id: serial("id").primaryKey(),

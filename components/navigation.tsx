@@ -6,9 +6,9 @@ import { Flame, BookOpen, Video, Trophy, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { href: "/learn", label: "Path", icon: Flame },
+  { href: "/path", label: "Path", icon: Flame },
   { href: "/library", label: "Library", icon: BookOpen },
-  { href: "/live", label: "Live", icon: Video },
+  { href: "/live-classes", label: "Live", icon: Video },
   { href: "/leaderboard", label: "Leaderboard", icon: Trophy },
   { href: "/profile", label: "Profile", icon: User },
 ];

@@ -35,7 +35,7 @@ export default function SignUpPage() {
       setError(error.message);
       setLoading(false);
     } else {
-      router.push("/courses");
+      router.push("/onboarding");
       router.refresh();
     }
   };
