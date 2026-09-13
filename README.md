@@ -64,12 +64,12 @@ lego-learn-and-go/
     |-- social.ts
     |-- tutor.ts
     |-- user-progress.ts
-    |-- user-subscription.ts
   |- app/
+    |-- (admin)/
     |-- (auth)/
     |-- (main)/
     |-- (marketing)/
-    |-- admin/
+    |-- (tutor)/
     |-- api/
     |-- lesson/
     |-- apple-icon.png
@@ -109,7 +109,6 @@ lego-learn-and-go/
     |-- admin.ts
     |-- ai.ts
     |-- badges.ts
-    |-- stripe.ts
     |-- utils.ts
   |- public/
   |- scripts/
