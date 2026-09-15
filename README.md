@@ -71,7 +71,9 @@ lego-learn-and-go/
     |-- (marketing)/
     |-- (tutor)/
     |-- api/
+    |-- auth/
     |-- lesson/
+    |-- reset-password/
     |-- apple-icon.png
     |-- favicon.ico
     |-- globals.css
@@ -81,10 +83,12 @@ lego-learn-and-go/
   |- components/
     |-- modals/
     |-- ui/
+    |-- admin-navigation.tsx
     |-- banner.tsx
     |-- bottom-navigation.tsx
     |-- empty-state.tsx
     |-- feed-wrapper.tsx
+    |-- learner-navigation.tsx
     |-- mascot.tsx
     |-- mobile-header.tsx
     |-- mobile-sidebar.tsx
@@ -94,6 +98,7 @@ lego-learn-and-go/
     |-- sidebar-item.tsx
     |-- sidebar.tsx
     |-- sticky-wrapper.tsx
+    |-- tutor-navigation.tsx
     |-- user-progress.tsx
   |- config/
     |-- index.ts
@@ -108,6 +113,7 @@ lego-learn-and-go/
     |-- supabase/
     |-- admin.ts
     |-- ai.ts
+    |-- auth-context.ts
     |-- badges.ts
     |-- utils.ts
   |- public/
@@ -120,6 +126,41 @@ lego-learn-and-go/
     |-- seed_full_data.sql
     |-- setup_test_accounts.sql
     |-- verify_rls.sql
+  |- stitch_lego_digital_learning_platform/
+    |-- lego_auth_forgot-password_forgot-password/
+    |-- lego_auth_reset-password_reset-password/
+    |-- lego_auth_signin_signin/
+    |-- lego_auth_signup_signup/
+    |-- lego_class_mentorship_class/
+    |-- lego_class-detail_class-detail_class-detail/
+    |-- lego_course_overview_course_python_fundamentals/
+    |-- lego_course-overview_course-overview_course-overview/
+    |-- lego_friends_social_friends/
+    |-- lego_friends-detail_friends-detail_friends-detail/
+    |-- lego_interactive_quiz_challenge/
+    |-- lego_leaderboard_leaderboard_leaderboard/
+    |-- lego_learner_library_library/
+    |-- lego_learning_path_path/
+    |-- lego_lesson_complete_celebration/
+    |-- lego_lesson_intro_variables_types/
+    |-- lego_profile_profile_profile/
+    |-- lego_profile-detail_profile-detail_profile-detail/
+    |-- lego_tutor_mentor_dashboard_tutor_dashboard/
+    |-- lego_tutor_mentorship_sessions_tutor_sessions/
+    |-- lego_tutor_my_learners_roster_tutor_learners/
+    |-- lego-badges-achievements_badges-achievements_badges-achievements/
+    |-- lego-daily-missions_daily-missions_daily-missions/
+    |-- lego-empty-states_empty-states_empty-states/
+    |-- lego-error-offline_error-offline_error-offline/
+    |-- lego-interactive-quiz_interactive-quiz_interactive-quiz/
+    |-- lego-lesson-complete_lesson-complete_lesson-complete/
+    |-- lego-lesson-intro_lesson-intro_lesson-intro/
+    |-- lego-notifications_notifications_notifications/
+    |-- lego-search-results_search-results_search-results/
+    |-- lego-settings_settings_settings/
+    |-- lego-streak-center_streak-center_streak-center/
+    |-- tactile_gamified_edtech/
+    |-- complete-project-frame-stitch.html
   |- store/
     |-- use-exit-modal.ts
     |-- use-hearts-modal.ts
@@ -130,6 +171,8 @@ lego-learn-and-go/
   |- .env/.env.local
   |- .gitignore
   |- .prettierrc.json
+  |- check-auth-users.ts
+  |- check-existing-users.ts
   |- components.json
   |- constants.ts
   |- drizzle.config.ts
@@ -142,12 +185,14 @@ lego-learn-and-go/
   |- pnpm-workspace.yaml
   |- postcss.config.js
   |- proxy.ts
+  |- setup-test-users.ts
   |- skills-lock.json
   |- tailwind.config.ts
   |- test-exit-criteria.ts
   |- test.sql
   |- tsconfig.json
   |- vercel.ts
+  |- verify-roles.ts
 ```
 <!--- FOLDER_STRUCTURE_END --->
 
