@@ -12,6 +12,7 @@ export default function SignInPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const router = useRouter();
   const supabase = createClient();
 
@@ -20,25 +21,51 @@ export default function SignInPage() {
     setLoading(true);
     setError(null);
 
-    console.log("Attempting sign in with:", email);
-
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
-    console.log("Sign in result:", { data, error });
-
     if (error) {
-      console.error("Sign in error:", error);
       setError(error.message);
       setLoading(false);
     } else {
-      console.log("Sign in successful, redirecting to /path");
-      // Wait a moment for auth state to be set
-      await new Promise(resolve => setTimeout(resolve, 500));
-      router.push("/path");
-      router.refresh();
+      // Fetch user role to determine redirect destination
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: profile } = await supabase
+          .from("user_progress")
+          .select("role")
+          .eq("userId", user.id)
+          .single();
+
+        const role = profile?.role || "learner";
+        
+        // Role-based redirect
+        const redirectPath = role === "tutor" ? "/tutor/dashboard" 
+                          : role === "admin" ? "/admin/admin-home" 
+                          : "/path";
+        
+        router.push(redirectPath);
+        router.refresh();
+      }
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setGoogleLoading(true);
+    setError(null);
+
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+
+    if (error) {
+      setError(error.message);
+      setGoogleLoading(false);
     }
   };
 
@@ -55,6 +82,28 @@ export default function SignInPage() {
             {error}
           </div>
         )}
+
+        {/* Google Sign In */}
+        <Button
+          type="button"
+          variant="ghost"
+          size="lg"
+          className="w-full border-2 border-slate-200"
+          onClick={handleGoogleSignIn}
+          disabled={googleLoading}
+        >
+          {googleLoading ? <Loader className="h-5 w-5 animate-spin mr-2" /> : null}
+          Continue with Google
+        </Button>
+
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t border-slate-200" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-white px-2 text-muted-foreground">Or continue with email</span>
+          </div>
+        </div>
 
         <form onSubmit={handleSignIn} className="space-y-4">
           <div>
@@ -79,6 +128,15 @@ export default function SignInPage() {
               className="w-full px-4 py-2 border-2 border-slate-200 rounded-xl focus:border-green-500 focus:outline-none"
               placeholder="••••••••"
             />
+          </div>
+
+          <div className="text-right">
+            <Link
+              href="/forgot-password"
+              className="text-sm text-primary-600 hover:underline font-semibold"
+            >
+              Forgot password?
+            </Link>
           </div>
 
           <Button type="submit" disabled={loading} size="lg" variant="secondary" className="w-full">

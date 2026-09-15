@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Error - LEGO Learn And Go</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&family=Nunito+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #22c55e;
+      --primary-dark: #15803d;
+      --primary-light: #4ade80;
+      --secondary: #f59e0b;
+      --secondary-dark: #d97706;
+      --tertiary: #3b82f6;
+      --tertiary-dark: #1d4ed8;
+      --surface: #faf8ff;
+      --surface-container: #eaedff;
+      --white: #ffffff;
+      --text-primary: #0f172a;
+      --text-secondary: #64748b;
+      --border: #e2e8f0;
+      --border-dark: #cbd5e1;
+      --error: #ef4444;
+      --success: #22c55e;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Nunito Sans', sans-serif;
+      background: linear-gradient(135deg, var(--surface) 0%, #f0fdf4 100%);
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .error-card {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-bottom: 4px solid var(--border-dark);
+      border-radius: 1rem;
+      padding: 3rem 2rem;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .error-card.error {
+      border-color: var(--error);
+      border-bottom-color: #b91c1c;
+    }
+
+    .error-card.offline {
+      border-color: var(--secondary);
+      border-bottom-color: var(--secondary-dark);
+    }
+
+    .error-icon {
+      font-size: 5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .error-title {
+      font-family: 'Rubik', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+    }
+
+    .error-message {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    .error-code {
+      font-family: 'Rubik', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      padding: 0.5rem 1rem;
+      background: var(--surface-container);
+      border-radius: 9999px;
+      display: inline-block;
+    }
+
+    .btn {
+      padding: 0.875rem 2rem;
+      border: none;
+      border-radius: 0.75rem;
+      font-family: 'Rubik', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      border-bottom: 3px solid var(--primary-dark);
+      color: var(--white);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-light);
+    }
+
+    .btn-primary:active {
+      transform: translateY(2px);
+      border-bottom-width: 1.5px;
+    }
+
+    .btn-secondary {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-bottom: 4px solid var(--border-dark);
+      color: var(--text-primary);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--tertiary);
+      border-bottom-color: var(--tertiary-dark);
+    }
+
+    .btn-secondary:active {
+      transform: translateY(2px);
+      border-bottom-width: 2px;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .section-title {
+      font-family: 'Rubik', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .section-subtitle {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .help-section {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-bottom: 4px solid var(--border-dark);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .help-title {
+      font-family: 'Rubik', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+    }
+
+    .help-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      background: var(--surface-container);
+      border-radius: 0.75rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .help-icon {
+      font-size: 1.25rem;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--white);
+      border-top: 2px solid var(--border);
+      padding: 0.75rem 1rem;
+      display: flex;
+      justify-content: space-around;
+      z-index: 100;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      font-weight: 600;
+      transition: color 0.2s ease;
+    }
+
+    .nav-item.active {
+      color: var(--primary);
+    }
+
+    .nav-icon {
+      font-size: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .bottom-nav {
+        display: flex;
+      }
+
+      .container {
+        padding-bottom: 5rem;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .bottom-nav {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="section-header">
+      <h1 class="section-title">Error & Offline States</h1>
+      <p class="section-subtitle">Design system examples for error and offline states</p>
+    </div>
+
+    <div class="error-card error">
+      <div class="error-icon">😢</div>
+      <h2 class="error-title">Something Went Wrong</h2>
+      <p class="error-message">We encountered an unexpected error while loading your content. Don't worry, your progress is safe!</p>
+      <div class="error-code">Error: 500</div>
+      <button class="btn btn-primary">Try Again</button>
+    </div>
+
+    <div class="error-card offline">
+      <div class="error-icon">📡</div>
+      <h2 class="error-title">You're Offline</h2>
+      <p class="error-message">It looks like you're not connected to the internet. Check your connection and try again.</p>
+      <button class="btn btn-primary">Retry Connection</button>
+    </div>
+
+    <div class="error-card">
+      <div class="error-icon">🔒</div>
+      <h2 class="error-title">Access Denied</h2>
+      <p class="error-message">You don't have permission to access this content. Please sign in or contact support if you think this is an error.</p>
+      <button class="btn btn-primary">Sign In</button>
+    </div>
+
+    <div class="error-card error">
+      <div class="error-icon">⏰</div>
+      <h2 class="error-title">Session Expired</h2>
+      <p class="error-message">Your session has expired. Please sign in again to continue learning.</p>
+      <button class="btn btn-primary">Sign In</button>
+    </div>
+
+    <div class="help-section">
+      <h3 class="help-title">Troubleshooting Tips</h3>
+      <div class="help-item">
+        <span class="help-icon">🔄</span>
+        <span>Refresh the page to try again</span>
+      </div>
+      <div class="help-item">
+        <span class="help-icon">📡</span>
+        <span>Check your internet connection</span>
+      </div>
+      <div class="help-item">
+        <span class="help-icon">🧹</span>
+        <span>Clear your browser cache</span>
+      </div>
+      <div class="help-item">
+        <span class="help-icon">💬</span>
+        <span>Contact support if the problem persists</span>
+      </div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="/path" class="nav-item">
+      <span class="nav-icon">🛤️</span>
+      <span>Path</span>
+    </a>
+    <a href="/library" class="nav-item">
+      <span class="nav-icon">📚</span>
+      <span>Library</span>
+    </a>
+    <a href="/class" class="nav-item">
+      <span class="nav-icon">👨‍🏫</span>
+      <span>Class</span>
+    </a>
+    <a href="/friends" class="nav-item">
+      <span class="nav-icon">👥</span>
+      <span>Friends</span>
+    </a>
+    <a href="/leaderboard" class="nav-item">
+      <span class="nav-icon">🏆</span>
+      <span>Ranks</span>
+    </a>
+    <a href="/profile" class="nav-item">
+      <span class="nav-icon">👤</span>
+      <span>Profile</span>
+    </a>
+  </nav>
+</body>
+</html>

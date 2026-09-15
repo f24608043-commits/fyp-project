@@ -34,6 +34,18 @@ export default function AdminCoursesPage() {
       return;
     }
 
+    // Verify admin role
+    const { data: profile } = await supabase
+      .from("user_progress")
+      .select("role")
+      .eq("userId", user.id)
+      .single();
+    
+    if (!profile || profile.role !== "admin") {
+      router.push("/path");
+      return;
+    }
+
     const { data: coursesData } = await supabase.from("courses").select("*");
     if (coursesData) {
       // Get unit and lesson counts for each course

@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Course Overview - LEGO Learn And Go</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&family=Nunito+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #22c55e;
+      --primary-dark: #15803d;
+      --primary-light: #4ade80;
+      --secondary: #f59e0b;
+      --secondary-dark: #d97706;
+      --tertiary: #3b82f6;
+      --tertiary-dark: #1d4ed8;
+      --surface: #faf8ff;
+      --surface-container: #eaedff;
+      --white: #ffffff;
+      --text-primary: #0f172a;
+      --text-secondary: #64748b;
+      --border: #e2e8f0;
+      --border-dark: #cbd5e1;
+      --error: #ef4444;
+      --success: #22c55e;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Nunito Sans', sans-serif;
+      background: linear-gradient(135deg, var(--surface) 0%, #f0fdf4 100%);
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .back-btn {
+      width: 40px;
+      height: 40px;
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-bottom: 4px solid var(--border-dark);
+      border-radius: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .back-btn:hover {
+      transform: translateX(-4px);
+    }
+
+    .back-btn:active {
+      transform: translateX(-2px);
+      border-bottom-width: 2px;
+    }
+
+    .page-title {
+      font-family: 'Rubik', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .mascot {
+      font-size: 2rem;
+    }
+
+    .course-header {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-bottom: 4px solid var(--border-dark);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .course-image {
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      border-radius: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .course-title {
+      font-family: 'Rubik', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .course-instructor {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+    }
+
+    .course-description {
+      font-size: 0.9375rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .course-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .meta-icon {
+      font-size: 1rem;
+    }
+
+    .course-progress {
+      margin-bottom: 1.5rem;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 12px;
+      background: var(--border);
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--primary);
+      border-radius: 9999px;
+      transition: width 0.3s ease;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 1rem;
+      border: none;
+      border-radius: 0.75rem;
+      font-family: 'Rubik', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      border-bottom: 4px solid var(--primary-dark);
+      color: var(--white);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-light);
+    }
+
+    .btn-primary:active {
+      transform: translateY(2px);
+      border-bottom-width: 2px;
+    }
+
+    .section {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-bottom: 4px solid var(--border-dark);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .section-icon {
+      font-size: 1.5rem;
+    }
+
+    .section-title {
+      font-family: 'Rubik', sans-serif;
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .unit-item {
+      background: var(--surface-container);
+      border: 2px solid var(--border);
+      border-bottom: 4px solid var(--border-dark);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .unit-item.locked {
+      opacity: 0.6;
+    }
+
+    .unit-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
+
+    .unit-title {
+      font-family: 'Rubik', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .unit-status {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+    }
+
+    .unit-status.completed {
+      background: var(--success);
+      color: var(--white);
+    }
+
+    .unit-status.in-progress {
+      background: var(--secondary);
+      color: var(--white);
+    }
+
+    .unit-status.locked {
+      background: var(--border);
+      color: var(--text-secondary);
+    }
+
+    .unit-meta {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .unit-progress {
+      margin-top: 0.75rem;
+    }
+
+    .unit-progress-bar {
+      width: 100%;
+      height: 6px;
+      background: var(--border);
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+
+    .unit-progress-fill {
+      height: 100%;
+      background: var(--primary);
+      border-radius: 9999px;
+      transition: width 0.3s ease;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--white);
+      border-top: 2px solid var(--border);
+      padding: 0.75rem 1rem;
+      display: flex;
+      justify-content: space-around;
+      z-index: 100;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      font-weight: 600;
+      transition: color 0.2s ease;
+    }
+
+    .nav-item.active {
+      color: var(--primary);
+    }
+
+    .nav-icon {
+      font-size: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .bottom-nav {
+        display: flex;
+      }
+
+      .container {
+        padding-bottom: 5rem;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .bottom-nav {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <button class="back-btn">←</button>
+      <h1 class="page-title">Python Fundamentals</h1>
+      <span class="mascot">😊</span>
+    </div>
+
+    <div class="course-header">
+      <div class="course-image">🐍</div>
+      <h2 class="course-title">Python Fundamentals</h2>
+      <p class="course-instructor">Instructor: Dr. Sarah Chen</p>
+      <p class="course-description">Master the fundamentals of Python programming. Learn variables, data types, control structures, functions, and more. Perfect for beginners starting their coding journey.</p>
+      
+      <div class="course-meta">
+        <div class="meta-item">
+          <span class="meta-icon">📊</span>
+          <span>Difficulty: Beginner</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-icon">📚</span>
+          <span>24 Lessons</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-icon">💎</span>
+          <span>+1,200 XP</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-icon">⏱️</span>
+          <span>~8 hours</span>
+        </div>
+      </div>
+
+      <div class="course-progress">
+        <div class="progress-label">
+          <span>Your Progress</span>
+          <span>42%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 42%"></div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary">Continue Course</button>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <span class="section-icon">📚</span>
+        <h2 class="section-title">Course Units</h2>
+      </div>
+
+      <div class="unit-item">
+        <div class="unit-header">
+          <span class="unit-title">Unit 1 — Python Basics</span>
+          <span class="unit-status completed">Completed</span>
+        </div>
+        <div class="unit-meta">
+          <span>6 lessons</span>
+          <span>+300 XP</span>
+        </div>
+        <div class="unit-progress">
+          <div class="unit-progress-bar">
+            <div class="unit-progress-fill" style="width: 100%"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="unit-item">
+        <div class="unit-header">
+          <span class="unit-title">Unit 2 — Variables & Data Types</span>
+          <span class="unit-status in-progress">In Progress</span>
+        </div>
+        <div class="unit-meta">
+          <span>5 lessons</span>
+          <span>+250 XP</span>
+        </div>
+        <div class="unit-progress">
+          <div class="unit-progress-bar">
+            <div class="unit-progress-fill" style="width: 60%"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="unit-item">
+        <div class="unit-header">
+          <span class="unit-title">Unit 3 — Conditions</span>
+          <span class="unit-status locked">Locked</span>
+        </div>
+        <div class="unit-meta">
+          <span>4 lessons</span>
+          <span>+200 XP</span>
+        </div>
+        <div class="unit-progress">
+          <div class="unit-progress-bar">
+            <div class="unit-progress-fill" style="width: 0%"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="unit-item">
+        <div class="unit-header">
+          <span class="unit-title">Unit 4 — Loops</span>
+          <span class="unit-status locked">Locked</span>
+        </div>
+        <div class="unit-meta">
+          <span>5 lessons</span>
+          <span>+250 XP</span>
+        </div>
+        <div class="unit-progress">
+          <div class="unit-progress-bar">
+            <div class="unit-progress-fill" style="width: 0%"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="unit-item">
+        <div class="unit-header">
+          <span class="unit-title">Unit 5 — Functions</span>
+          <span class="unit-status locked">Locked</span>
+        </div>
+        <div class="unit-meta">
+          <span>4 lessons</span>
+          <span>+200 XP</span>
+        </div>
+        <div class="unit-progress">
+          <div class="unit-progress-bar">
+            <div class="unit-progress-fill" style="width: 0%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="/path" class="nav-item">
+      <span class="nav-icon">🛤️</span>
+      <span>Path</span>
+    </a>
+    <a href="/library" class="nav-item active">
+      <span class="nav-icon">📚</span>
+      <span>Library</span>
+    </a>
+    <a href="/class" class="nav-item">
+      <span class="nav-icon">👨‍🏫</span>
+      <span>Class</span>
+    </a>
+    <a href="/friends" class="nav-item">
+      <span class="nav-icon">👥</span>
+      <span>Friends</span>
+    </a>
+    <a href="/leaderboard" class="nav-item">
+      <span class="nav-icon">🏆</span>
+      <span>Ranks</span>
+    </a>
+    <a href="/profile" class="nav-item">
+      <span class="nav-icon">👤</span>
+      <span>Profile</span>
+    </a>
+  </nav>
+</body>
+</html>

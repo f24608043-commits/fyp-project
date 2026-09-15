@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { Calendar, Clock, Video, CheckCircle, XCircle, Clock as Pending, Filter } from "lucide-react";
-import { getUser } from "@/lib/supabase/server";
+import { getAuthUser } from "@/lib/auth-context";
 import { getUserProgress } from "@/db/queries";
 import db from "@/db/drizzle";
 import { tutorSessions } from "@/db/schema";
@@ -10,10 +10,11 @@ import { CompleteSessionForm } from "./session-actions";
 const TutorSessionsPage = async ({
   searchParams,
 }: {
-  searchParams: { status?: string };
+  searchParams: Promise<{ status?: string }>;
 }) => {
-  const user = await getUser();
-  if (!user) return redirect("/sign-in");
+  const { status } = await searchParams;
+  const auth = await getAuthUser();
+  if (!auth?.user) return redirect("/sign-in");
 
   const userProgress = await getUserProgress();
   if (!userProgress || userProgress.role !== "tutor") {
@@ -22,7 +23,7 @@ const TutorSessionsPage = async ({
 
   // Get all sessions
   const sessions = await db.query.tutorSessions.findMany({
-    where: eq(tutorSessions.tutorId, user.id),
+    where: eq(tutorSessions.tutorId, auth.user.id),
     with: {
       course: true,
     },
@@ -30,8 +31,8 @@ const TutorSessionsPage = async ({
   });
 
   // Filter by status if provided
-  const filteredSessions = searchParams.status
-    ? sessions.filter((s) => s.status === searchParams.status)
+  const filteredSessions = status
+    ? sessions.filter((s) => s.status === status)
     : sessions;
 
   const statusConfig = {
@@ -57,7 +58,7 @@ const TutorSessionsPage = async ({
             <a
               href="/tutor/sessions"
               className={`px-4 py-2 rounded-xl text-sm font-bold transition-colors ${
-                !searchParams.status
+                !status
                   ? "bg-primary-500 text-white"
                   : "bg-white border-2 border-slate-200 text-muted-foreground hover:border-primary-300"
               }`}
@@ -67,7 +68,7 @@ const TutorSessionsPage = async ({
             <a
               href="/tutor/sessions?status=requested"
               className={`px-4 py-2 rounded-xl text-sm font-bold transition-colors ${
-                searchParams.status === "requested"
+                status === "requested"
                   ? "bg-yellow-500 text-white"
                   : "bg-white border-2 border-slate-200 text-muted-foreground hover:border-primary-300"
               }`}
@@ -77,7 +78,7 @@ const TutorSessionsPage = async ({
             <a
               href="/tutor/sessions?status=confirmed"
               className={`px-4 py-2 rounded-xl text-sm font-bold transition-colors ${
-                searchParams.status === "confirmed"
+                status === "confirmed"
                   ? "bg-green-500 text-white"
                   : "bg-white border-2 border-slate-200 text-muted-foreground hover:border-primary-300"
               }`}
@@ -87,7 +88,7 @@ const TutorSessionsPage = async ({
             <a
               href="/tutor/sessions?status=completed"
               className={`px-4 py-2 rounded-xl text-sm font-bold transition-colors ${
-                searchParams.status === "completed"
+                status === "completed"
                   ? "bg-blue-500 text-white"
                   : "bg-white border-2 border-slate-200 text-muted-foreground hover:border-primary-300"
               }`}
@@ -97,7 +98,7 @@ const TutorSessionsPage = async ({
             <a
               href="/tutor/sessions?status=cancelled"
               className={`px-4 py-2 rounded-xl text-sm font-bold transition-colors ${
-                searchParams.status === "cancelled"
+                status === "cancelled"
                   ? "bg-red-500 text-white"
                   : "bg-white border-2 border-slate-200 text-muted-foreground hover:border-primary-300"
               }`}

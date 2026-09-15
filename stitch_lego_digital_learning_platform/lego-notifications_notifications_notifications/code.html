@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notifications - LEGO Learn And Go</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&family=Nunito+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #22c55e;
+      --primary-dark: #15803d;
+      --primary-light: #4ade80;
+      --secondary: #f59e0b;
+      --secondary-dark: #d97706;
+      --tertiary: #3b82f6;
+      --tertiary-dark: #1d4ed8;
+      --surface: #faf8ff;
+      --surface-container: #eaedff;
+      --white: #ffffff;
+      --text-primary: #0f172a;
+      --text-secondary: #64748b;
+      --border: #e2e8f0;
+      --border-dark: #cbd5e1;
+      --error: #ef4444;
+      --success: #22c55e;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Nunito Sans', sans-serif;
+      background: linear-gradient(135deg, var(--surface) 0%, #f0fdf4 100%);
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+    }
+
+    .headline {
+      font-family: 'Rubik', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .mark-read-btn {
+      padding: 0.5rem 1rem;
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-bottom: 4px solid var(--border-dark);
+      border-radius: 0.75rem;
+      font-family: 'Rubik', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .mark-read-btn:hover {
+      border-color: var(--tertiary);
+      border-bottom-color: var(--tertiary-dark);
+    }
+
+    .notification-card {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-bottom: 4px solid var(--border-dark);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      display: flex;
+      gap: 1rem;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .notification-card:hover {
+      transform: translateX(4px);
+    }
+
+    .notification-card.unread {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border-color: var(--primary);
+      border-bottom-color: var(--primary-dark);
+    }
+
+    .notification-icon {
+      font-size: 2rem;
+      flex-shrink: 0;
+    }
+
+    .notification-content {
+      flex: 1;
+    }
+
+    .notification-title {
+      font-family: 'Rubik', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .notification-message {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+      line-height: 1.4;
+    }
+
+    .notification-time {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .notification-xp {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.75rem;
+      background: var(--secondary);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    .empty-state {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-bottom: 4px solid var(--border-dark);
+      border-radius: 1rem;
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+
+    .empty-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+
+    .empty-title {
+      font-family: 'Rubik', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .empty-message {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--white);
+      border-top: 2px solid var(--border);
+      padding: 0.75rem 1rem;
+      display: flex;
+      justify-content: space-around;
+      z-index: 100;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      font-weight: 600;
+      transition: color 0.2s ease;
+    }
+
+    .nav-item.active {
+      color: var(--primary);
+    }
+
+    .nav-icon {
+      font-size: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .bottom-nav {
+        display: flex;
+      }
+
+      .container {
+        padding-bottom: 5rem;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .bottom-nav {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1 class="headline">Notifications</h1>
+      <button class="mark-read-btn">Mark All Read</button>
+    </div>
+
+    <div class="notification-card unread">
+      <span class="notification-icon">🏅</span>
+      <div class="notification-content">
+        <div class="notification-title">New Badge Unlocked!</div>
+        <div class="notification-message">You earned the "Quiz Champion" badge for scoring 100% on 3 quizzes.</div>
+        <div class="notification-time">2 hours ago</div>
+      </div>
+      <span class="notification-xp">💎 +50 XP</span>
+    </div>
+
+    <div class="notification-card unread">
+      <span class="notification-icon">👥</span>
+      <div class="notification-content">
+        <div class="notification-title">New Friend Request</div>
+        <div class="notification-message">Sarah Chen wants to be your learning buddy.</div>
+        <div class="notification-time">5 hours ago</div>
+      </div>
+    </div>
+
+    <div class="notification-card">
+      <span class="notification-icon">🔥</span>
+      <div class="notification-content">
+        <div class="notification-title">Streak Reminder</div>
+        <div class="notification-message">Complete a lesson today to keep your 7-day streak alive!</div>
+        <div class="notification-time">Yesterday</div>
+      </div>
+    </div>
+
+    <div class="notification-card">
+      <span class="notification-icon">📚</span>
+      <div class="notification-content">
+        <div class="notification-title">New Course Available</div>
+        <div class="notification-message">"AI Fundamentals" is now available in your library.</div>
+        <div class="notification-time">2 days ago</div>
+      </div>
+    </div>
+
+    <div class="notification-card">
+      <span class="notification-icon">🎯</span>
+      <div class="notification-content">
+        <div class="notification-title">Daily Mission Complete</div>
+        <div class="notification-message">You completed all daily missions! Keep up the great work.</div>
+        <div class="notification-time">3 days ago</div>
+      </div>
+      <span class="notification-xp">💎 +90 XP</span>
+    </div>
+
+    <div class="notification-card">
+      <span class="notification-icon">👨‍🏫</span>
+      <div class="notification-content">
+        <div class="notification-title">Class Reminder</div>
+        <div class="notification-message">Your Python Debugging session starts in 1 hour.</div>
+        <div class="notification-time">4 days ago</div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="/path" class="nav-item">
+      <span class="nav-icon">🛤️</span>
+      <span>Path</span>
+    </a>
+    <a href="/library" class="nav-item">
+      <span class="nav-icon">📚</span>
+      <span>Library</span>
+    </a>
+    <a href="/class" class="nav-item">
+      <span class="nav-icon">👨‍🏫</span>
+      <span>Class</span>
+    </a>
+    <a href="/friends" class="nav-item">
+      <span class="nav-icon">👥</span>
+      <span>Friends</span>
+    </a>
+    <a href="/leaderboard" class="nav-item">
+      <span class="nav-icon">🏆</span>
+      <span>Ranks</span>
+    </a>
+    <a href="/profile" class="nav-item active">
+      <span class="nav-icon">👤</span>
+      <span>Profile</span>
+    </a>
+  </nav>
+</body>
+</html>

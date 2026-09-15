@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Empty States - LEGO Learn And Go</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&family=Nunito+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #22c55e;
+      --primary-dark: #15803d;
+      --primary-light: #4ade80;
+      --secondary: #f59e0b;
+      --secondary-dark: #d97706;
+      --tertiary: #3b82f6;
+      --tertiary-dark: #1d4ed8;
+      --surface: #faf8ff;
+      --surface-container: #eaedff;
+      --white: #ffffff;
+      --text-primary: #0f172a;
+      --text-secondary: #64748b;
+      --border: #e2e8f0;
+      --border-dark: #cbd5e1;
+      --error: #ef4444;
+      --success: #22c55e;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Nunito Sans', sans-serif;
+      background: linear-gradient(135deg, var(--surface) 0%, #f0fdf4 100%);
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .empty-state-card {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-bottom: 4px solid var(--border-dark);
+      border-radius: 1rem;
+      padding: 3rem 2rem;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .empty-icon {
+      font-size: 4rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .empty-title {
+      font-family: 'Rubik', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+    }
+
+    .empty-message {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    .btn {
+      padding: 0.875rem 2rem;
+      border: none;
+      border-radius: 0.75rem;
+      font-family: 'Rubik', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      border-bottom: 3px solid var(--primary-dark);
+      color: var(--white);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-light);
+    }
+
+    .btn-primary:active {
+      transform: translateY(2px);
+      border-bottom-width: 1.5px;
+    }
+
+    .btn-secondary {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-bottom: 4px solid var(--border-dark);
+      color: var(--text-primary);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--tertiary);
+      border-bottom-color: var(--tertiary-dark);
+    }
+
+    .btn-secondary:active {
+      transform: translateY(2px);
+      border-bottom-width: 2px;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .section-title {
+      font-family: 'Rubik', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .section-subtitle {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--white);
+      border-top: 2px solid var(--border);
+      padding: 0.75rem 1rem;
+      display: flex;
+      justify-content: space-around;
+      z-index: 100;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      font-weight: 600;
+      transition: color 0.2s ease;
+    }
+
+    .nav-item.active {
+      color: var(--primary);
+    }
+
+    .nav-icon {
+      font-size: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .bottom-nav {
+        display: flex;
+      }
+
+      .container {
+        padding-bottom: 5rem;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .bottom-nav {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="section-header">
+      <h1 class="section-title">Empty States</h1>
+      <p class="section-subtitle">Design system examples for empty states</p>
+    </div>
+
+    <div class="empty-state-card">
+      <div class="empty-icon">📚</div>
+      <h2 class="empty-title">No Courses Yet</h2>
+      <p class="empty-message">You haven't enrolled in any courses yet. Explore the library to find your first learning adventure!</p>
+      <button class="btn btn-primary">Browse Library</button>
+    </div>
+
+    <div class="empty-state-card">
+      <div class="empty-icon">👥</div>
+      <h2 class="empty-title">No Friends Yet</h2>
+      <p class="empty-message">Learning is more fun with friends! Connect with other learners to share your progress and motivate each other.</p>
+      <button class="btn btn-primary">Find Friends</button>
+    </div>
+
+    <div class="empty-state-card">
+      <div class="empty-icon">🔔</div>
+      <h2 class="empty-title">No Notifications</h2>
+      <p class="empty-message">You're all caught up! We'll notify you when there's something new to see.</p>
+      <button class="btn btn-secondary">Go Back</button>
+    </div>
+
+    <div class="empty-state-card">
+      <div class="empty-icon">🏅</div>
+      <h2 class="empty-title">No Badges Yet</h2>
+      <p class="empty-message">Complete lessons and challenges to earn badges and show off your achievements!</p>
+      <button class="btn btn-primary">Start Learning</button>
+    </div>
+
+    <div class="empty-state-card">
+      <div class="empty-icon">🔍</div>
+      <h2 class="empty-title">No Results Found</h2>
+      <p class="empty-message">We couldn't find any courses matching your search. Try different keywords or browse all courses.</p>
+      <button class="btn btn-secondary">Clear Search</button>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="/path" class="nav-item">
+      <span class="nav-icon">🛤️</span>
+      <span>Path</span>
+    </a>
+    <a href="/library" class="nav-item">
+      <span class="nav-icon">📚</span>
+      <span>Library</span>
+    </a>
+    <a href="/class" class="nav-item">
+      <span class="nav-icon">👨‍🏫</span>
+      <span>Class</span>
+    </a>
+    <a href="/friends" class="nav-item">
+      <span class="nav-icon">👥</span>
+      <span>Friends</span>
+    </a>
+    <a href="/leaderboard" class="nav-item">
+      <span class="nav-icon">🏆</span>
+      <span>Ranks</span>
+    </a>
+    <a href="/profile" class="nav-item">
+      <span class="nav-icon">👤</span>
+      <span>Profile</span>
+    </a>
+  </nav>
+</body>
+</html>

@@ -1,7 +1,7 @@
 ﻿import { cache } from "react";
 import { and, desc, eq, ilike, or } from "drizzle-orm";
 
-import { getUser } from "@/lib/supabase/server";
+import { getAuthUser } from "@/lib/auth-context";
 import db from "./drizzle";
 import {
   badges,
@@ -27,11 +27,12 @@ export const getCourses = cache(async () => {
 });
 
 export const getUserProgress = cache(async () => {
-  const user = await getUser();
-  if (!user) return null;
+  const auth = await getAuthUser();
+  if (!auth?.progress) return null;
 
+  // Return cached progress with active course
   const data = await db.query.userProgress.findFirst({
-    where: eq(userProgress.userId, user.id),
+    where: eq(userProgress.userId, auth.user.id),
     with: {
       activeCourse: true,
     },
@@ -41,10 +42,10 @@ export const getUserProgress = cache(async () => {
 });
 
 export const getUnits = cache(async () => {
-  const user = await getUser();
+  const auth = await getAuthUser();
   const currentProgress = await getUserProgress();
 
-  if (!user || !currentProgress?.activeCourseId) return [];
+  if (!auth?.user || !currentProgress?.activeCourseId) return [];
 
   // Fetch units with lessons only - don't fetch challenges yet
   const data = await db.query.units.findMany({
@@ -66,7 +67,7 @@ export const getUnits = cache(async () => {
 
   // Fetch challenge progress separately for better performance
   const allChallengeProgress = await db.query.challengeProgress.findMany({
-    where: eq(challengeProgress.userId, user.id),
+    where: eq(challengeProgress.userId, auth.user.id),
   });
 
   const completedChallengeIds = new Set(
@@ -114,10 +115,10 @@ export const getCourseById = cache(async (courseId: number) => {
 });
 
 export const getCourseProgress = cache(async () => {
-  const user = await getUser();
+  const auth = await getAuthUser();
   const currentProgress = await getUserProgress();
 
-  if (!user || !currentProgress?.activeCourseId) return null;
+  if (!auth?.user || !currentProgress?.activeCourseId) return null;
 
   // Fetch units with lessons only
   const unitsInActiveCourse = await db.query.units.findMany({
@@ -131,14 +132,30 @@ export const getCourseProgress = cache(async () => {
           title: true,
           unitId: true,
           order: true,
+          youtubeVideoId: true,
         },
       },
     },
   });
 
+  // Attach unit info to each lesson for activeLesson
+  const unitsWithUnitInfo = unitsInActiveCourse.map(unit => ({
+    ...unit,
+    lessons: unit.lessons.map(lesson => ({
+      ...lesson,
+      unit: {
+        id: unit.id,
+        title: unit.title,
+        description: unit.description,
+        courseId: unit.courseId,
+        order: unit.order,
+      },
+    })),
+  }));
+
   // Fetch challenge progress separately
   const allChallengeProgress = await db.query.challengeProgress.findMany({
-    where: eq(challengeProgress.userId, user.id),
+    where: eq(challengeProgress.userId, auth.user.id),
   });
 
   const completedChallengeIds = new Set(
@@ -148,12 +165,12 @@ export const getCourseProgress = cache(async () => {
   );
 
   // Fetch challenges for all lessons
-  const lessonIds = unitsInActiveCourse.flatMap((unit) => unit.lessons.map((l) => l.id));
+  const lessonIds = unitsWithUnitInfo.flatMap((unit) => unit.lessons.map((l) => l.id));
   const allChallenges = await db.query.challenges.findMany({
     where: (challenges, { inArray }) => inArray(challenges.lessonId, lessonIds),
   });
 
-  const firstUncompletedLesson = unitsInActiveCourse
+  const firstUncompletedLesson = unitsWithUnitInfo
     .flatMap((unit) => unit.lessons)
     .find((lesson) => {
       const lessonChallenges = allChallenges.filter((c) => c.lessonId === lesson.id);
@@ -167,8 +184,8 @@ export const getCourseProgress = cache(async () => {
 });
 
 export const getLesson = cache(async (id?: number) => {
-  const user = await getUser();
-  if (!user) return null;
+  const auth = await getAuthUser();
+  if (!auth?.user) return null;
 
   const courseProgress = await getCourseProgress();
   const lessonId = id || courseProgress?.activeLessonId;
@@ -183,7 +200,7 @@ export const getLesson = cache(async (id?: number) => {
         with: {
           challengeOptions: true,
           challengeProgress: {
-            where: eq(challengeProgress.userId, user.id),
+            where: eq(challengeProgress.userId, auth.user.id),
           },
         },
       },
@@ -223,8 +240,8 @@ export const getLessonPercentage = cache(async () => {
 });
 
 export const getTopTenUsers = cache(async () => {
-  const user = await getUser();
-  if (!user) return [];
+  const auth = await getAuthUser();
+  if (!auth?.user) return [];
 
   const data = await db.query.userProgress.findMany({
     orderBy: (userProgress, { desc }) => [desc(userProgress.points)],
@@ -246,8 +263,8 @@ export const getBadges = cache(async () => {
 });
 
 export const getUserBadges = cache(async (userId?: string) => {
-  const user = await getUser();
-  const targetId = userId || user?.id;
+  const auth = await getAuthUser();
+  const targetId = userId || auth?.user?.id;
   if (!targetId) return [];
 
   return await db.query.userBadges.findMany({
@@ -260,11 +277,11 @@ export const getUserBadges = cache(async (userId?: string) => {
 
 // Social & Friends
 export const getFriendships = cache(async () => {
-  const user = await getUser();
-  if (!user) return [];
+  const auth = await getAuthUser();
+  if (!auth?.user) return [];
 
   return await db.query.friendships.findMany({
-    where: or(eq(friendships.userIdA, user.id), eq(friendships.userIdB, user.id)),
+    where: or(eq(friendships.userIdA, auth.user.id), eq(friendships.userIdB, auth.user.id)),
   });
 });
 
@@ -301,11 +318,11 @@ export const getTutorAvailability = cache(async (tutorId: string) => {
 });
 
 export const getUserTutorSessions = cache(async () => {
-  const user = await getUser();
-  if (!user) return [];
+  const auth = await getAuthUser();
+  if (!auth?.user) return [];
 
   return await db.query.tutorSessions.findMany({
-    where: or(eq(tutorSessions.learnerId, user.id), eq(tutorSessions.tutorId, user.id)),
+    where: or(eq(tutorSessions.learnerId, auth.user.id), eq(tutorSessions.tutorId, auth.user.id)),
     with: {
       course: true,
     },

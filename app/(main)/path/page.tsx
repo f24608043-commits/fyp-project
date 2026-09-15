@@ -10,14 +10,14 @@ import {
   getUnits,
   getUserProgress,
 } from "@/db/queries";
-import { getUser } from "@/lib/supabase/server";
+import { getAuthUser } from "@/lib/auth-context";
 
 import { Header } from "./header";
 import { Unit } from "./unit";
 
 const LearnPage = async () => {
-  const user = await getUser();
-  if (!user) return redirect("/sign-in");
+  const auth = await getAuthUser();
+  if (!auth?.user) return redirect("/sign-in");
 
   const [
     userProgress,

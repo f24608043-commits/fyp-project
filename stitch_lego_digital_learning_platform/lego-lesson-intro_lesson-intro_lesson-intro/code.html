@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson Intro - LEGO Learn And Go</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&family=Nunito+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #22c55e;
+      --primary-dark: #15803d;
+      --primary-light: #4ade80;
+      --secondary: #f59e0b;
+      --secondary-dark: #d97706;
+      --tertiary: #3b82f6;
+      --tertiary-dark: #1d4ed8;
+      --surface: #faf8ff;
+      --surface-container: #eaedff;
+      --white: #ffffff;
+      --text-primary: #0f172a;
+      --text-secondary: #64748b;
+      --border: #e2e8f0;
+      --border-dark: #cbd5e1;
+      --error: #ef4444;
+      --success: #22c55e;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Nunito Sans', sans-serif;
+      background: linear-gradient(135deg, var(--surface) 0%, #f0fdf4 100%);
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .back-btn {
+      width: 40px;
+      height: 40px;
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-bottom: 4px solid var(--border-dark);
+      border-radius: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .back-btn:hover {
+      transform: translateX(-4px);
+    }
+
+    .back-btn:active {
+      transform: translateX(-2px);
+      border-bottom-width: 2px;
+    }
+
+    .progress-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--surface-container);
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .mascot {
+      font-size: 2rem;
+    }
+
+    .lesson-header {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-bottom: 4px solid var(--border-dark);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .lesson-title {
+      font-family: 'Rubik', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .lesson-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .lesson-objective {
+      margin-bottom: 1.5rem;
+    }
+
+    .objective-title {
+      font-family: 'Rubik', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+    }
+
+    .objective-list {
+      list-style: none;
+    }
+
+    .objective-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem 0;
+      font-size: 0.9375rem;
+      color: var(--text-secondary);
+    }
+
+    .objective-check {
+      color: var(--primary);
+      font-size: 1.25rem;
+    }
+
+    .video-section {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-bottom: 4px solid var(--border-dark);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .section-icon {
+      font-size: 1.5rem;
+    }
+
+    .section-title {
+      font-family: 'Rubik', sans-serif;
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .video-preview {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #000;
+      border-radius: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .video-thumbnail {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.7;
+    }
+
+    .play-button {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      background: var(--white);
+      border: 4px solid var(--primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .play-button:hover {
+      transform: scale(1.1);
+    }
+
+    .video-info {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 1rem;
+      border: none;
+      border-radius: 0.75rem;
+      font-family: 'Rubik', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      border-bottom: 4px solid var(--primary-dark);
+      color: var(--white);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-light);
+    }
+
+    .btn-primary:active {
+      transform: translateY(2px);
+      border-bottom-width: 2px;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--white);
+      border-top: 2px solid var(--border);
+      padding: 0.75rem 1rem;
+      display: flex;
+      justify-content: space-around;
+      z-index: 100;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      font-weight: 600;
+      transition: color 0.2s ease;
+    }
+
+    .nav-item.active {
+      color: var(--primary);
+    }
+
+    .nav-icon {
+      font-size: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .bottom-nav {
+        display: flex;
+      }
+
+      .container {
+        padding-bottom: 5rem;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .bottom-nav {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <button class="back-btn">←</button>
+      <div class="progress-badge">
+        <span>📚</span>
+        <span>Lesson 3 of 8</span>
+      </div>
+      <span class="mascot">💪</span>
+    </div>
+
+    <div class="lesson-header">
+      <h1 class="lesson-title">Variables, Strings & Types</h1>
+      <div class="lesson-meta">
+        <span>📖 Unit: Python Fundamentals</span>
+        <span>⏱️ ~15 minutes</span>
+        <span>💎 +50 XP</span>
+      </div>
+
+      <div class="lesson-objective">
+        <h2 class="objective-title">Learning Objective</h2>
+        <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.75rem;">By the end of this lesson you will understand:</p>
+        <ul class="objective-list">
+          <li class="objective-item">
+            <span class="objective-check">✓</span>
+            <span>Variables and how to use them</span>
+          </li>
+          <li class="objective-item">
+            <span class="objective-check">✓</span>
+            <span>String manipulation basics</span>
+          </li>
+          <li class="objective-item">
+            <span class="objective-check">✓</span>
+            <span>Numbers and basic data types</span>
+          </li>
+          <li class="objective-item">
+            <span class="objective-check">✓</span>
+            <span>Type conversion in Python</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="video-section">
+      <div class="section-header">
+        <span class="section-icon">🎥</span>
+        <h2 class="section-title">Video Lesson</h2>
+      </div>
+      
+      <div class="video-preview">
+        <div class="video-thumbnail" style="background: linear-gradient(135deg, var(--tertiary) 0%, var(--tertiary-dark) 100%);"></div>
+        <div class="play-button">▶</div>
+      </div>
+      <p class="video-info">YouTube lecture • 12:34 minutes</p>
+    </div>
+
+    <button class="btn btn-primary">Start Lesson</button>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="/path" class="nav-item active">
+      <span class="nav-icon">🛤️</span>
+      <span>Path</span>
+    </a>
+    <a href="/library" class="nav-item">
+      <span class="nav-icon">📚</span>
+      <span>Library</span>
+    </a>
+    <a href="/class" class="nav-item">
+      <span class="nav-icon">👨‍🏫</span>
+      <span>Class</span>
+    </a>
+    <a href="/friends" class="nav-item">
+      <span class="nav-icon">👥</span>
+      <span>Friends</span>
+    </a>
+    <a href="/leaderboard" class="nav-item">
+      <span class="nav-icon">🏆</span>
+      <span>Ranks</span>
+    </a>
+    <a href="/profile" class="nav-item">
+      <span class="nav-icon">👤</span>
+      <span>Profile</span>
+    </a>
+  </nav>
+</body>
+</html>

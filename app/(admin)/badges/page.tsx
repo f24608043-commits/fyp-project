@@ -36,6 +36,18 @@ export default function AdminBadgesPage() {
       return;
     }
 
+    // Verify admin role
+    const { data: profile } = await supabase
+      .from("user_progress")
+      .select("role")
+      .eq("userId", user.id)
+      .single();
+    
+    if (!profile || profile.role !== "admin") {
+      router.push("/path");
+      return;
+    }
+
     const { data } = await supabase.from("badges").select("*");
     if (data) {
       setBadges(data);

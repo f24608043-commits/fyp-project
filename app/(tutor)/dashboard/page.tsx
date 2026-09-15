@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
-import { Calendar, Clock, Users, Video, Check, CheckCircle, XCircle, Pending } from "lucide-react";
-import { getUser } from "@/lib/supabase/server";
+import { Calendar, Clock, Users, Video, Check, CheckCircle, XCircle, Clock as Pending } from "lucide-react";
+import { getAuthUser } from "@/lib/auth-context";
 import { getUserProgress } from "@/db/queries";
 import db from "@/db/drizzle";
 import { tutorSessions, userProgress } from "@/db/schema";
@@ -8,8 +8,8 @@ import { eq, and, gte } from "drizzle-orm";
 import { ConfirmSessionForm, DeclineSessionForm } from "./session-actions";
 
 const TutorDashboardPage = async () => {
-  const user = await getUser();
-  if (!user) return redirect("/sign-in");
+  const auth = await getAuthUser();
+  if (!auth?.user) return redirect("/sign-in");
 
   const userProgress = await getUserProgress();
   if (!userProgress || userProgress.role !== "tutor") {
@@ -19,7 +19,7 @@ const TutorDashboardPage = async () => {
   // Get pending requests (status = 'requested')
   const pendingRequests = await db.query.tutorSessions.findMany({
     where: and(
-      eq(tutorSessions.tutorId, user.id),
+      eq(tutorSessions.tutorId, auth.user.id),
       eq(tutorSessions.status, "requested")
     ),
     with: {
@@ -28,23 +28,31 @@ const TutorDashboardPage = async () => {
     orderBy: (tutorSessions, { asc }) => [asc(tutorSessions.scheduledAt)],
   });
 
-  // Fetch learner names for pending requests
-  const pendingRequestsWithLearners = await Promise.all(
-    pendingRequests.map(async (session) => {
-      const learner = await db.query.userProgress.findFirst({
-        where: eq(userProgress.userId, session.learnerId),
-      });
-      return {
-        ...session,
-        learnerName: learner?.userName || "Unknown",
-      };
-    })
-  );
+  // Fetch all unique learner IDs from pending requests
+  const learnerIds = [...new Set(pendingRequests.map(s => s.learnerId))];
+  
+  // Fetch all learners in one query
+  const learners = await db.query.userProgress.findMany({
+    where: (userProgress, { inArray }) => inArray(userProgress.userId, learnerIds),
+    columns: {
+      userId: true,
+      userName: true,
+    },
+  });
+
+  // Create a map for quick lookup
+  const learnerMap = new Map(learners.map(l => [l.userId, l.userName]));
+
+  // Attach learner names to sessions
+  const pendingRequestsWithLearners = pendingRequests.map(session => ({
+    ...session,
+    learnerName: learnerMap.get(session.learnerId) || "Unknown",
+  }));
 
   // Get upcoming confirmed sessions
   const upcomingSessions = await db.query.tutorSessions.findMany({
     where: and(
-      eq(tutorSessions.tutorId, user.id),
+      eq(tutorSessions.tutorId, auth.user.id),
       eq(tutorSessions.status, "confirmed"),
       gte(tutorSessions.scheduledAt, new Date())
     ),
@@ -57,7 +65,7 @@ const TutorDashboardPage = async () => {
 
   // Get total sessions count
   const totalSessions = await db.query.tutorSessions.findMany({
-    where: eq(tutorSessions.tutorId, user.id),
+    where: eq(tutorSessions.tutorId, auth.user.id),
   });
 
   const completedSessions = totalSessions.filter(

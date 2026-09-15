@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Progress - LEGO Learn And Go</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&family=Nunito+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #22c55e;
+      --primary-dark: #15803d;
+      --primary-light: #4ade80;
+      --secondary: #f59e0b;
+      --secondary-dark: #d97706;
+      --tertiary: #3b82f6;
+      --tertiary-dark: #1d4ed8;
+      --surface: #faf8ff;
+      --surface-container: #eaedff;
+      --white: #ffffff;
+      --text-primary: #0f172a;
+      --text-secondary: #64748b;
+      --border: #e2e8f0;
+      --border-dark: #cbd5e1;
+      --error: #ef4444;
+      --success: #22c55e;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Nunito Sans', sans-serif;
+      background: linear-gradient(135deg, var(--surface) 0%, #f0fdf4 100%);
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .back-btn {
+      width: 40px;
+      height: 40px;
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-bottom: 4px solid var(--border-dark);
+      border-radius: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .back-btn:hover {
+      transform: translateX(-4px);
+    }
+
+    .back-btn:active {
+      transform: translateX(-2px);
+      border-bottom-width: 2px;
+    }
+
+    .page-title {
+      font-family: 'Rubik', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .mascot {
+      font-size: 2rem;
+    }
+
+    .section {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-bottom: 4px solid var(--border-dark);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .section-icon {
+      font-size: 1.5rem;
+    }
+
+    .section-title {
+      font-family: 'Rubik', sans-serif;
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+
+    .stat-card {
+      background: var(--surface-container);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-family: 'Rubik', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+    }
+
+    .chart-section {
+      margin-bottom: 1.25rem;
+    }
+
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .chart-title {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .chart-value {
+      font-family: 'Rubik', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .bar-chart {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .bar-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .bar-label {
+      width: 100px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .bar-track {
+      flex: 1;
+      height: 12px;
+      background: var(--border);
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+      border-radius: 9999px;
+      transition: width 0.3s ease;
+    }
+
+    .bar-value {
+      font-family: 'Rubik', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      width: 40px;
+      text-align: right;
+    }
+
+    .skill-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      background: var(--surface-container);
+      border-radius: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .skill-icon {
+      font-size: 1.5rem;
+    }
+
+    .skill-info {
+      flex: 1;
+    }
+
+    .skill-name {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .skill-bar {
+      width: 100%;
+      height: 8px;
+      background: var(--border);
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+
+    .skill-fill {
+      height: 100%;
+      background: var(--tertiary);
+      border-radius: 9999px;
+      transition: width 0.3s ease;
+    }
+
+    .skill-percent {
+      font-family: 'Rubik', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--tertiary);
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--white);
+      border-top: 2px solid var(--border);
+      padding: 0.75rem 1rem;
+      display: flex;
+      justify-content: space-around;
+      z-index: 100;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      font-weight: 600;
+      transition: color 0.2s ease;
+    }
+
+    .nav-item.active {
+      color: var(--primary);
+    }
+
+    .nav-icon {
+      font-size: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .bottom-nav {
+        display: flex;
+      }
+
+      .container {
+        padding-bottom: 5rem;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .bottom-nav {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <button class="back-btn">←</button>
+      <h1 class="page-title">My Progress</h1>
+      <span class="mascot">😊</span>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <span class="section-icon">📊</span>
+        <h2 class="section-title">Level & XP</h2>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value">7</div>
+          <div class="stat-label">Current Level</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">1,420</div>
+          <div class="stat-label">Total XP</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">320</div>
+          <div class="stat-label">Weekly XP</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">580</div>
+          <div class="stat-label">XP to Level 8</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <span class="section-icon">🔥</span>
+        <h2 class="section-title">Streak Statistics</h2>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value">7</div>
+          <div class="stat-label">Current Streak</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">14</div>
+          <div class="stat-label">Longest Streak</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">45</div>
+          <div class="stat-label">Total Learning Days</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">3</div>
+          <div class="stat-label">Days This Week</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <span class="section-icon">📚</span>
+        <h2 class="section-title">Learning Activity</h2>
+      </div>
+      
+      <div class="chart-section">
+        <div class="chart-header">
+          <span class="chart-title">Weekly XP</span>
+          <span class="chart-value">320 XP</span>
+        </div>
+        <div class="bar-chart">
+          <div class="bar-item">
+            <span class="bar-label">Mon</span>
+            <div class="bar-track">
+              <div class="bar-fill" style="width: 60%"></div>
+            </div>
+            <span class="bar-value">60</span>
+          </div>
+          <div class="bar-item">
+            <span class="bar-label">Tue</span>
+            <div class="bar-track">
+              <div class="bar-fill" style="width: 80%"></div>
+            </div>
+            <span class="bar-value">80</span>
+          </div>
+          <div class="bar-item">
+            <span class="bar-label">Wed</span>
+            <div class="bar-track">
+              <div class="bar-fill" style="width: 40%"></div>
+            </div>
+            <span class="bar-value">40</span>
+          </div>
+          <div class="bar-item">
+            <span class="bar-label">Thu</span>
+            <div class="bar-track">
+              <div class="bar-fill" style="width: 70%"></div>
+            </div>
+            <span class="bar-value">70</span>
+          </div>
+          <div class="bar-item">
+            <span class="bar-label">Fri</span>
+            <div class="bar-track">
+              <div class="bar-fill" style="width: 50%"></div>
+            </div>
+            <span class="bar-value">50</span>
+          </div>
+          <div class="bar-item">
+            <span class="bar-label">Sat</span>
+            <div class="bar-track">
+              <div class="bar-fill" style="width: 0%"></div>
+            </div>
+            <span class="bar-value">0</span>
+          </div>
+          <div class="bar-item">
+            <span class="bar-label">Sun</span>
+            <div class="bar-track">
+              <div class="bar-fill" style="width: 20%"></div>
+            </div>
+            <span class="bar-value">20</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-section">
+        <div class="chart-header">
+          <span class="chart-title">Lessons Completed</span>
+          <span class="chart-value">12</span>
+        </div>
+        <div class="bar-chart">
+          <div class="bar-item">
+            <span class="bar-label">This Week</span>
+            <div class="bar-track">
+              <div class="bar-fill" style="width: 80%"></div>
+            </div>
+            <span class="bar-value">8</span>
+          </div>
+          <div class="bar-item">
+            <span class="bar-label">Last Week</span>
+            <div class="bar-track">
+              <div class="bar-fill" style="width: 60%"></div>
+            </div>
+            <span class="bar-value">6</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-section">
+        <div class="chart-header">
+          <span class="chart-title">Quiz Accuracy</span>
+          <span class="chart-value">85%</span>
+        </div>
+        <div class="bar-chart">
+          <div class="bar-item">
+            <span class="bar-label">Correct</span>
+            <div class="bar-track">
+              <div class="bar-fill" style="width: 85%; background: var(--success);"></div>
+            </div>
+            <span class="bar-value">85%</span>
+          </div>
+          <div class="bar-item">
+            <span class="bar-label">Incorrect</span>
+            <div class="bar-track">
+              <div class="bar-fill" style="width: 15%; background: var(--error);"></div>
+            </div>
+            <span class="bar-value">15%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <span class="section-icon">🎯</span>
+        <h2 class="section-title">Skill Progress</h2>
+      </div>
+      
+      <div class="skill-item">
+        <span class="skill-icon">🐍</span>
+        <div class="skill-info">
+          <div class="skill-name">Python</div>
+          <div class="skill-bar">
+            <div class="skill-fill" style="width: 80%"></div>
+          </div>
+        </div>
+        <span class="skill-percent">80%</span>
+      </div>
+
+      <div class="skill-item">
+        <span class="skill-icon">⚡</span>
+        <div class="skill-info">
+          <div class="skill-name">JavaScript</div>
+          <div class="skill-bar">
+            <div class="skill-fill" style="width: 60%"></div>
+          </div>
+        </div>
+        <span class="skill-percent">60%</span>
+      </div>
+
+      <div class="skill-item">
+        <span class="skill-icon">🧮</span>
+        <div class="skill-info">
+          <div class="skill-name">Algorithms</div>
+          <div class="skill-bar">
+            <div class="skill-fill" style="width: 40%"></div>
+          </div>
+        </div>
+        <span class="skill-percent">40%</span>
+      </div>
+
+      <div class="skill-item">
+        <span class="skill-icon">🌐</span>
+        <div class="skill-info">
+          <div class="skill-name">Web Dev</div>
+          <div class="skill-bar">
+            <div class="skill-fill" style="width: 25%"></div>
+          </div>
+        </div>
+        <span class="skill-percent">25%</span>
+      </div>
+
+      <div class="skill-item">
+        <span class="skill-icon">🤖</span>
+        <div class="skill-info">
+          <div class="skill-name">AI/ML</div>
+          <div class="skill-bar">
+            <div class="skill-fill" style="width: 15%"></div>
+          </div>
+        </div>
+        <span class="skill-percent">15%</span>
+      </div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="/path" class="nav-item">
+      <span class="nav-icon">🛤️</span>
+      <span>Path</span>
+    </a>
+    <a href="/library" class="nav-item">
+      <span class="nav-icon">📚</span>
+      <span>Library</span>
+    </a>
+    <a href="/class" class="nav-item">
+      <span class="nav-icon">👨‍🏫</span>
+      <span>Class</span>
+    </a>
+    <a href="/friends" class="nav-item">
+      <span class="nav-icon">👥</span>
+      <span>Friends</span>
+    </a>
+    <a href="/leaderboard" class="nav-item">
+      <span class="nav-icon">🏆</span>
+      <span>Ranks</span>
+    </a>
+    <a href="/profile" class="nav-item active">
+      <span class="nav-icon">👤</span>
+      <span>Profile</span>
+    </a>
+  </nav>
+</body>
+</html>

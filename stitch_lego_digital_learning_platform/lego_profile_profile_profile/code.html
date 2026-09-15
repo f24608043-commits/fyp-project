@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile - LEGO Learn And Go</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&family=Nunito+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #22c55e;
+      --primary-dark: #15803d;
+      --primary-light: #4ade80;
+      --secondary: #f59e0b;
+      --secondary-dark: #d97706;
+      --tertiary: #3b82f6;
+      --tertiary-dark: #1d4ed8;
+      --surface: #faf8ff;
+      --surface-container: #eaedff;
+      --white: #ffffff;
+      --text-primary: #0f172a;
+      --text-secondary: #64748b;
+      --border: #e2e8f0;
+      --border-dark: #cbd5e1;
+      --error: #ef4444;
+      --success: #22c55e;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Nunito Sans', sans-serif;
+      background: linear-gradient(135deg, var(--surface) 0%, #f0fdf4 100%);
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .profile-header {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-bottom: 4px solid var(--border-dark);
+      border-radius: 1rem;
+      padding: 2rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .avatar-section {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 1.5rem;
+    }
+
+    .avatar {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+      border-radius: 50%;
+      border: 4px solid var(--primary-dark);
+      border-bottom: 6px solid var(--primary-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+    }
+
+    .role-badge {
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 0.25rem 0.75rem;
+      background: var(--primary);
+      border-radius: 9999px;
+      font-family: 'Rubik', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--white);
+      text-transform: uppercase;
+    }
+
+    .profile-name {
+      font-family: 'Rubik', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .profile-email {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+    }
+
+    .profile-actions {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+    }
+
+    .btn {
+      padding: 0.625rem 1.25rem;
+      border: none;
+      border-radius: 0.75rem;
+      font-family: 'Rubik', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      border-bottom: 3px solid var(--primary-dark);
+      color: var(--white);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-light);
+    }
+
+    .btn-primary:active {
+      transform: translateY(2px);
+      border-bottom-width: 1.5px;
+    }
+
+    .btn-secondary {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-bottom: 4px solid var(--border-dark);
+      color: var(--text-primary);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--tertiary);
+      border-bottom-color: var(--tertiary-dark);
+    }
+
+    .btn-secondary:active {
+      transform: translateY(2px);
+      border-bottom-width: 2px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-bottom: 4px solid var(--border-dark);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      text-align: center;
+    }
+
+    .stat-icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-value {
+      font-family: 'Rubik', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+    }
+
+    .section {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-bottom: 4px solid var(--border-dark);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .section-icon {
+      font-size: 1.5rem;
+    }
+
+    .section-title {
+      font-family: 'Rubik', sans-serif;
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .progress-section {
+      margin-bottom: 1rem;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 12px;
+      background: var(--border);
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--primary);
+      border-radius: 9999px;
+      transition: width 0.3s ease;
+    }
+
+    .milestone {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      background: var(--surface-container);
+      border-radius: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .milestone-icon {
+      font-size: 1.25rem;
+    }
+
+    .milestone-info {
+      flex: 1;
+    }
+
+    .milestone-title {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .milestone-xp {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .badge-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .badge-card {
+      background: var(--surface-container);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      text-align: center;
+      transition: transform 0.2s ease;
+    }
+
+    .badge-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .badge-card.locked {
+      opacity: 0.5;
+    }
+
+    .badge-icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .badge-name {
+      font-family: 'Rubik', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-primary);
+ margin-bottom: 0.25rem;
+    }
+
+    .badge-status {
+      font-size: 0.625rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .badge-card.unlocked .badge-status {
+      color: var(--success);
+    }
+
+    .friends-section {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .friends-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .friends-count {
+      font-family: 'Rubik', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .friends-label {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .settings-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .settings-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.875rem 1rem;
+      background: var(--surface-container);
+      border-radius: 0.75rem;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .settings-item:hover {
+      background: var(--border);
+    }
+
+    .settings-label {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .settings-icon {
+      font-size: 1.25rem;
+    }
+
+    .settings-arrow {
+      font-size: 1rem;
+      color: var(--text-secondary);
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--white);
+      border-top: 2px solid var(--border);
+      padding: 0.75rem 1rem;
+      display: flex;
+      justify-content: space-around;
+      z-index: 100;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      font-weight: 600;
+      transition: color 0.2s ease;
+    }
+
+    .nav-item.active {
+      color: var(--primary);
+    }
+
+    .nav-icon {
+      font-size: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .badge-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .bottom-nav {
+        display: flex;
+      }
+
+      .container {
+        padding-bottom: 5rem;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .bottom-nav {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="profile-header">
+      <div class="avatar-section">
+        <div class="avatar">😊</div>
+        <div class="role-badge">Learner</div>
+      </div>
+      <h1 class="profile-name">Alex Morgan</h1>
+      <p class="profile-email">alex@example.com</p>
+      <div class="profile-actions">
+        <button class="btn btn-primary">Edit Profile</button>
+        <button class="btn btn-secondary">Change Avatar</button>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">🔥</div>
+        <div class="stat-value">7</div>
+        <div class="stat-label">Streak</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⚡</div>
+        <div class="stat-value">1,420</div>
+        <div class="stat-label">Total XP</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">❤️</div>
+        <div class="stat-value">5</div>
+        <div class="stat-label">Hearts</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🏆</div>
+        <div class="stat-value">3</div>
+        <div class="stat-label">Badges</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📚</div>
+        <div class="stat-value">12</div>
+        <div class="stat-label">Lessons</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🎓</div>
+        <div class="stat-value">1</div>
+        <div class="stat-label">Courses</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <span class="section-icon">📊</span>
+        <h2 class="section-title">Current Progress</h2>
+      </div>
+      <div class="progress-section">
+        <div class="progress-label">
+          <span>Python Fundamentals</span>
+          <span>42%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 42%"></div>
+        </div>
+      </div>
+      <div class="progress-section">
+        <div class="progress-label">
+          <span>Level 7</span>
+          <span>65% to Level 8</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 65%"></div>
+        </div>
+      </div>
+      <div class="milestone">
+        <span class="milestone-icon">🎯</span>
+        <div class="milestone-info">
+          <div class="milestone-title">Next Milestone</div>
+          <div class="milestone-xp">580 XP to Level 8</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <span class="section-icon">🏅</span>
+        <h2 class="section-title">Achievements</h2>
+      </div>
+      <div class="badge-grid">
+        <div class="badge-card unlocked">
+          <div class="badge-icon">🎯</div>
+          <div class="badge-name">First Step</div>
+          <div class="badge-status">Unlocked</div>
+        </div>
+        <div class="badge-card unlocked">
+          <div class="badge-icon">🔥</div>
+          <div class="badge-name">Streak Master</div>
+          <div class="badge-status">Unlocked</div>
+        </div>
+        <div class="badge-card unlocked">
+          <div class="badge-icon">💯</div>
+          <div class="badge-name">Quiz Champion</div>
+          <div class="badge-status">Unlocked</div>
+        </div>
+        <div class="badge-card locked">
+          <div class="badge-icon">📚</div>
+          <div class="badge-name">Course Explorer</div>
+          <div class="badge-status">Locked</div>
+        </div>
+        <div class="badge-card locked">
+          <div class="badge-icon">⭐</div>
+          <div class="badge-name">Perfect Score</div>
+          <div class="badge-status">Locked</div>
+        </div>
+        <div class="badge-card locked">
+          <div class="badge-icon">🌅</div>
+          <div class="badge-name">Early Bird</div>
+          <div class="badge-status">Locked</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <span class="section-icon">👥</span>
+        <h2 class="section-title">Friends</h2>
+      </div>
+      <div class="friends-section">
+        <div class="friends-info">
+          <div class="friends-count">8</div>
+          <div class="friends-label">friends</div>
+        </div>
+        <button class="btn btn-primary">View Friends</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <span class="section-icon">⚙️</span>
+        <h2 class="section-title">Settings</h2>
+      </div>
+      <div class="settings-list">
+        <div class="settings-item">
+          <div class="settings-label">
+            <span class="settings-icon">👤</span>
+            <span>Account</span>
+          </div>
+          <span class="settings-arrow">›</span>
+        </div>
+        <div class="settings-item">
+          <div class="settings-label">
+            <span class="settings-icon">🔒</span>
+            <span>Password</span>
+          </div>
+          <span class="settings-arrow">›</span>
+        </div>
+        <div class="settings-item">
+          <div class="settings-label">
+            <span class="settings-icon">🔔</span>
+            <span>Notifications</span>
+          </div>
+          <span class="settings-arrow">›</span>
+        </div>
+        <div class="settings-item">
+          <div class="settings-label">
+            <span class="settings-icon">🎨</span>
+            <span>Appearance</span>
+          </div>
+          <span class="settings-arrow">›</span>
+        </div>
+        <div class="settings-item">
+          <div class="settings-label">
+            <span class="settings-icon">🌐</span>
+            <span>Language</span>
+          </div>
+          <span class="settings-arrow">›</span>
+        </div>
+        <div class="settings-item">
+          <div class="settings-label">
+            <span class="settings-icon">🔒</span>
+            <span>Privacy</span>
+          </div>
+          <span class="settings-arrow">›</span>
+        </div>
+        <div class="settings-item">
+          <div class="settings-label">
+            <span class="settings-icon">🚪</span>
+            <span style="color: var(--error);">Sign Out</span>
+          </div>
+          <span class="settings-arrow">›</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="/path" class="nav-item">
+      <span class="nav-icon">🛤️</span>
+      <span>Path</span>
+    </a>
+    <a href="/library" class="nav-item">
+      <span class="nav-icon">📚</span>
+      <span>Library</span>
+    </a>
+    <a href="/class" class="nav-item">
+      <span class="nav-icon">👨‍🏫</span>
+      <span>Class</span>
+    </a>
+    <a href="/friends" class="nav-item">
+      <span class="nav-icon">👥</span>
+      <span>Friends</span>
+    </a>
+    <a href="/leaderboard" class="nav-item">
+      <span class="nav-icon">🏆</span>
+      <span>Ranks</span>
+    </a>
+    <a href="/profile" class="nav-item active">
+      <span class="nav-icon">👤</span>
+      <span>Profile</span>
+    </a>
+  </nav>
+</body>
+</html>

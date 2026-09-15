@@ -13,6 +13,7 @@ export default function SignUpPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const router = useRouter();
   const supabase = createClient();
 
@@ -21,7 +22,7 @@ export default function SignUpPage() {
     setLoading(true);
     setError(null);
 
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -34,9 +35,41 @@ export default function SignUpPage() {
     if (error) {
       setError(error.message);
       setLoading(false);
-    } else {
-      router.push("/onboarding");
-      router.refresh();
+    } else if (data.user) {
+      // Create user_progress record immediately
+      const { error: profileError } = await supabase
+        .from("user_progress")
+        .insert({
+          userId: data.user.id,
+          userName: name,
+          role: "learner",
+          fullName: name,
+        });
+
+      if (profileError) {
+        setError("Failed to create profile. Please try again.");
+        setLoading(false);
+      } else {
+        router.push("/onboarding");
+        router.refresh();
+      }
+    }
+  };
+
+  const handleGoogleSignUp = async () => {
+    setGoogleLoading(true);
+    setError(null);
+
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+
+    if (error) {
+      setError(error.message);
+      setGoogleLoading(false);
     }
   };
 
@@ -53,6 +86,28 @@ export default function SignUpPage() {
             {error}
           </div>
         )}
+
+        {/* Google Sign Up */}
+        <Button
+          type="button"
+          variant="ghost"
+          size="lg"
+          className="w-full border-2 border-slate-200"
+          onClick={handleGoogleSignUp}
+          disabled={googleLoading}
+        >
+          {googleLoading ? <Loader className="h-5 w-5 animate-spin mr-2" /> : null}
+          Sign up with Google
+        </Button>
+
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t border-slate-200" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-white px-2 text-muted-foreground">Or sign up with email</span>
+          </div>
+        </div>
 
         <form onSubmit={handleSignUp} className="space-y-4">
           <div>

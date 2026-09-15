@@ -1,8 +1,18 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  images: { unoptimized: true },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**",
+      },
+    ],
+  },
   devIndicators: false,
+  compress: true,
+  poweredByHeader: false,
+  reactStrictMode: true,
   headers: async () => [
     {
       source: "/api/(.*)",
@@ -22,6 +32,15 @@ const nextConfig: NextConfig = {
         {
           key: "Content-Range",
           value: "bytes : 0-9/*",
+        },
+      ],
+    },
+    {
+      source: "/(.*)",
+      headers: [
+        {
+          key: "Cache-Control",
+          value: "public, max-age=31536000, immutable",
         },
       ],
     },

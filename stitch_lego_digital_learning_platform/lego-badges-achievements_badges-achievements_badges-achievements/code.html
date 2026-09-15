@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Achievements - LEGO Learn And Go</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&family=Nunito+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #22c55e;
+      --primary-dark: #15803d;
+      --primary-light: #4ade80;
+      --secondary: #f59e0b;
+      --secondary-dark: #d97706;
+      --tertiary: #3b82f6;
+      --tertiary-dark: #1d4ed8;
+      --surface: #faf8ff;
+      --surface-container: #eaedff;
+      --white: #ffffff;
+      --text-primary: #0f172a;
+      --text-secondary: #64748b;
+      --border: #e2e8f0;
+      --border-dark: #cbd5e1;
+      --error: #ef4444;
+      --success: #22c55e;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Nunito Sans', sans-serif;
+      background: linear-gradient(135deg, var(--surface) 0%, #f0fdf4 100%);
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .headline {
+      font-family: 'Rubik', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .supporting-text {
+      font-size: 1rem;
+      color: var(--text-secondary);
+    }
+
+    .mascot {
+      font-size: 2rem;
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .filter-pill {
+      padding: 0.5rem 1rem;
+      border: 2px solid var(--border);
+      border-bottom: 3px solid var(--border-dark);
+      border-radius: 9999px;
+      font-family: 'Rubik', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      background: var(--white);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .filter-pill:hover {
+      border-color: var(--tertiary);
+      border-bottom-color: var(--tertiary-dark);
+      color: var(--tertiary);
+    }
+
+    .filter-pill.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      border-bottom-color: var(--primary-dark);
+      color: var(--white);
+    }
+
+    .badge-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .badge-card {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-bottom: 4px solid var(--border-dark);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      text-align: center;
+      transition: transform 0.2s ease;
+      cursor: pointer;
+    }
+
+    .badge-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .badge-card.locked {
+      opacity: 0.5;
+    }
+
+    .badge-icon {
+      font-size: 3rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .badge-card.locked .badge-icon {
+      filter: grayscale(100%);
+    }
+
+    .badge-name {
+      font-family: 'Rubik', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .badge-description {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.75rem;
+      line-height: 1.4;
+    }
+
+    .badge-status {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+    }
+
+    .badge-card.unlocked .badge-status {
+      background: var(--success);
+      color: var(--white);
+    }
+
+    .badge-card.locked .badge-status {
+      background: var(--border);
+      color: var(--text-secondary);
+    }
+
+    .badge-card.in-progress .badge-status {
+      background: var(--secondary);
+      color: var(--white);
+    }
+
+    .badge-detail-modal {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-bottom: 4px solid var(--border-dark);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      display: none;
+    }
+
+    .badge-detail-modal.show {
+      display: block;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-icon {
+      font-size: 3rem;
+    }
+
+    .modal-title {
+      font-family: 'Rubik', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .modal-description {
+      font-size: 0.9375rem;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+
+    .modal-criteria {
+      background: var(--surface-container);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .criteria-title {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .criteria-text {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .modal-progress {
+      margin-bottom: 1rem;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: var(--border);
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--primary);
+      border-radius: 9999px;
+      transition: width 0.3s ease;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 0.875rem;
+      border: none;
+      border-radius: 0.75rem;
+      font-family: 'Rubik', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .btn-secondary {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-bottom: 4px solid var(--border-dark);
+      color: var(--text-primary);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--tertiary);
+      border-bottom-color: var(--tertiary-dark);
+    }
+
+    .btn-secondary:active {
+      transform: translateY(2px);
+      border-bottom-width: 2px;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--white);
+      border-top: 2px solid var(--border);
+      padding: 0.75rem 1rem;
+      display: flex;
+      justify-content: space-around;
+      z-index: 100;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      font-weight: 600;
+      transition: color 0.2s ease;
+    }
+
+    .nav-item.active {
+      color: var(--primary);
+    }
+
+    .nav-icon {
+      font-size: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .badge-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .bottom-nav {
+        display: flex;
+      }
+
+      .container {
+        padding-bottom: 5rem;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .bottom-nav {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1 class="headline">Achievements</h1>
+      <p class="supporting-text">Every milestone deserves recognition.</p>
+    </div>
+
+    <div class="filters">
+      <button class="filter-pill active">All</button>
+      <button class="filter-pill">Learning</button>
+      <button class="filter-pill">Streaks</button>
+      <button class="filter-pill">Quizzes</button>
+      <button class="filter-pill">Social</button>
+      <button class="filter-pill">Courses</button>
+    </div>
+
+    <div class="badge-grid">
+      <div class="badge-card unlocked" onclick="showBadgeDetail('first-step')">
+        <div class="badge-icon">🎯</div>
+        <div class="badge-name">First Step</div>
+        <div class="badge-description">Complete your first lesson</div>
+        <div class="badge-status">Unlocked</div>
+      </div>
+
+      <div class="badge-card unlocked" onclick="showBadgeDetail('streak-master')">
+        <div class="badge-icon">🔥</div>
+        <div class="badge-name">Streak Master</div>
+        <div class="badge-description">Maintain a 7-day streak</div>
+        <div class="badge-status">Unlocked</div>
+      </div>
+
+      <div class="badge-card unlocked" onclick="showBadgeDetail('quiz-champion')">
+        <div class="badge-icon">💯</div>
+        <div class="badge-name">Quiz Champion</div>
+        <div class="badge-description">Score 100% on 3 quizzes</div>
+        <div class="badge-status">Unlocked</div>
+      </div>
+
+      <div class="badge-card in-progress" onclick="showBadgeDetail('course-explorer')">
+        <div class="badge-icon">📚</div>
+        <div class="badge-name">Course Explorer</div>
+        <div class="badge-description">Complete 3 different courses</div>
+        <div class="badge-status">In Progress</div>
+      </div>
+
+      <div class="badge-card locked" onclick="showBadgeDetail('perfect-score')">
+        <div class="badge-icon">⭐</div>
+        <div class="badge-name">Perfect Score</div>
+        <div class="badge-description">Get 100% on 10 quizzes</div>
+        <div class="badge-status">Locked</div>
+      </div>
+
+      <div class="badge-card locked" onclick="showBadgeDetail('early-bird')">
+        <div class="badge-icon">🌅</div>
+        <div class="badge-name">Early Bird</div>
+        <div class="badge-description">Complete 5 lessons before 9 AM</div>
+        <div class="badge-status">Locked</div>
+      </div>
+
+      <div class="badge-card locked" onclick="showBadgeDetail('social-learner')">
+        <div class="badge-icon">👥</div>
+        <div class="badge-name">Social Learner</div>
+        <div class="badge-description">Add 10 friends</div>
+        <div class="badge-status">Locked</div>
+      </div>
+
+      <div class="badge-card locked" onclick="showBadgeDetail('xp-master')">
+        <div class="badge-icon">⚡</div>
+        <div class="badge-name">XP Master</div>
+        <div class="badge-description">Earn 10,000 total XP</div>
+        <div class="badge-status">Locked</div>
+      </div>
+    </div>
+
+    <div class="badge-detail-modal" id="badgeDetail">
+      <div class="modal-header">
+        <div class="modal-icon" id="modalIcon">🔥</div>
+        <div>
+          <h2 class="modal-title" id="modalTitle">Streak Master</h2>
+          <div class="badge-status unlocked" id="modalStatus">Unlocked</div>
+        </div>
+      </div>
+      <p class="modal-description" id="modalDescription">Maintain a 7-day learning streak to unlock this achievement.</p>
+      
+      <div class="modal-criteria">
+        <div class="criteria-title">Unlock Criteria</div>
+        <div class="criteria-text" id="modalCriteria">Complete lessons for 7 consecutive days</div>
+      </div>
+
+      <div class="modal-progress" id="modalProgressSection">
+        <div class="progress-label">
+          <span>Progress</span>
+          <span id="modalProgressText">5 / 7 days</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="modalProgressBar" style="width: 71%"></div>
+        </div>
+      </div>
+
+      <button class="btn btn-secondary" onclick="hideBadgeDetail()">Close</button>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="/path" class="nav-item">
+      <span class="nav-icon">🛤️</span>
+      <span>Path</span>
+    </a>
+    <a href="/library" class="nav-item">
+      <span class="nav-icon">📚</span>
+      <span>Library</span>
+    </a>
+    <a href="/class" class="nav-item">
+      <span class="nav-icon">👨‍🏫</span>
+      <span>Class</span>
+    </a>
+    <a href="/friends" class="nav-item">
+      <span class="nav-icon">👥</span>
+      <span>Friends</span>
+    </a>
+    <a href="/leaderboard" class="nav-item">
+      <span class="nav-icon">🏆</span>
+      <span>Ranks</span>
+    </a>
+    <a href="/profile" class="nav-item active">
+      <span class="nav-icon">👤</span>
+      <span>Profile</span>
+    </a>
+  </nav>
+
+  <script>
+    const badgeData = {
+      'first-step': {
+        icon: '🎯',
+        title: 'First Step',
+        description: 'Complete your first lesson to begin your learning journey.',
+        criteria: 'Complete 1 lesson',
+        status: 'Unlocked',
+        progress: '1 / 1 lessons',
+        progressPercent: 100
+      },
+      'streak-master': {
+        icon: '🔥',
+        title: 'Streak Master',
+        description: 'Maintain a 7-day learning streak to unlock this achievement.',
+        criteria: 'Complete lessons for 7 consecutive days',
+        status: 'Unlocked',
+        progress: '7 / 7 days',
+        progressPercent: 100
+      },
+      'quiz-champion': {
+        icon: '💯',
+        title: 'Quiz Champion',
+        description: 'Score 100% on 3 quizzes to prove your mastery.',
+        criteria: 'Get 100% on 3 quizzes',
+        status: 'Unlocked',
+        progress: '3 / 3 quizzes',
+        progressPercent: 100
+      },
+      'course-explorer': {
+        icon: '📚',
+        title: 'Course Explorer',
+        description: 'Complete 3 different courses to expand your knowledge.',
+        criteria: 'Complete 3 different courses',
+        status: 'In Progress',
+        progress: '2 / 3 courses',
+        progressPercent: 67
+      },
+      'perfect-score': {
+        icon: '⭐',
+        title: 'Perfect Score',
+        description: 'Achieve perfection by getting 100% on 10 quizzes.',
+        criteria: 'Get 100% on 10 quizzes',
+        status: 'Locked',
+        progress: '3 / 10 quizzes',
+        progressPercent: 30
+      },
+      'early-bird': {
+        icon: '🌅',
+        title: 'Early Bird',
+        description: 'Complete 5 lessons before 9 AM to show your dedication.',
+        criteria: 'Complete 5 lessons before 9 AM',
+        status: 'Locked',
+        progress: '0 / 5 lessons',
+        progressPercent: 0
+      },
+      'social-learner': {
+        icon: '👥',
+        title: 'Social Learner',
+        description: 'Add 10 friends to learn together.',
+        criteria: 'Add 10 friends',
+        status: 'Locked',
+        progress: '8 / 10 friends',
+        progressPercent: 80
+      },
+      'xp-master': {
+        icon: '⚡',
+        title: 'XP Master',
+        description: 'Earn 10,000 total XP to become a true master.',
+        criteria: 'Earn 10,000 total XP',
+        status: 'Locked',
+        progress: '1,420 / 10,000 XP',
+        progressPercent: 14
+      }
+    };
+
+    function showBadgeDetail(badgeId) {
+      const badge = badgeData[badgeId];
+      const modal = document.getElementById('badgeDetail');
+      
+      document.getElementById('modalIcon').textContent = badge.icon;
+      document.getElementById('modalTitle').textContent = badge.title;
+      document.getElementById('modalDescription').textContent = badge.description;
+      document.getElementById('modalCriteria').textContent = badge.criteria;
+      document.getElementById('modalStatus').textContent = badge.status;
+      document.getElementById('modalStatus').className = `badge-status ${badge.status.toLowerCase().replace(' ', '-')}`;
+      document.getElementById('modalProgressText').textContent = badge.progress;
+      document.getElementById('modalProgressBar').style.width = badge.progressPercent + '%';
+      
+      modal.classList.add('show');
+    }
+
+    function hideBadgeDetail() {
+      document.getElementById('badgeDetail').classList.remove('show');
+    }
+  </script>
+</body>
+</html>

@@ -15,6 +15,7 @@ export default function OnboardingPage() {
   const [selectedCourseId, setSelectedCourseId] = useState<number | null>(null);
   const [selectedGoal, setSelectedGoal] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [courses, setCourses] = useState<any[]>([]);
 
   useEffect(() => {
@@ -55,7 +56,7 @@ export default function OnboardingPage() {
           }, 2000);
         }
       } catch (error) {
-        console.error("Error completing onboarding:", error);
+        setError("Failed to complete onboarding. Please try again.");
       } finally {
         setLoading(false);
       }

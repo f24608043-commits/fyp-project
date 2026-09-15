@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learning Library - LEGO Learn And Go</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&family=Nunito+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #22c55e;
+      --primary-dark: #15803d;
+      --primary-light: #4ade80;
+      --secondary: #f59e0b;
+      --secondary-dark: #d97706;
+      --tertiary: #3b82f6;
+      --tertiary-dark: #1d4ed8;
+      --surface: #faf8ff;
+      --surface-container: #eaedff;
+      --white: #ffffff;
+      --text-primary: #0f172a;
+      --text-secondary: #64748b;
+      --border: #e2e8f0;
+      --border-dark: #cbd5e1;
+      --error: #ef4444;
+      --success: #22c55e;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Nunito Sans', sans-serif;
+      background: linear-gradient(135deg, var(--surface) 0%, #f0fdf4 100%);
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .headline {
+      font-family: 'Rubik', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .supporting-text {
+      font-size: 1rem;
+      color: var(--text-secondary);
+    }
+
+    .search-section {
+      margin-bottom: 2rem;
+    }
+
+    .search-bar {
+      width: 100%;
+      padding: 1rem 1.25rem;
+      border: 2px solid var(--border);
+      border-bottom: 4px solid var(--border-dark);
+      border-radius: 1rem;
+      font-family: 'Nunito Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      background: var(--white);
+      transition: all 0.2s ease;
+    }
+
+    .search-bar:focus {
+      outline: none;
+      border-color: var(--primary);
+      border-bottom-color: var(--primary-dark);
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .filter-pill {
+      padding: 0.5rem 1rem;
+      border: 2px solid var(--border);
+      border-bottom: 3px solid var(--border-dark);
+      border-radius: 9999px;
+      font-family: 'Rubik', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      background: var(--white);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .filter-pill:hover {
+      border-color: var(--tertiary);
+      border-bottom-color: var(--tertiary-dark);
+      color: var(--tertiary);
+    }
+
+    .filter-pill.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      border-bottom-color: var(--primary-dark);
+      color: var(--white);
+    }
+
+    .section {
+      margin-bottom: 2.5rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-title {
+      font-family: 'Rubik', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .section-subtitle {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .mascot-small {
+      font-size: 1.5rem;
+    }
+
+    .featured-card {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-bottom: 4px solid var(--border-dark);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .featured-image {
+      width: 200px;
+      height: 150px;
+      background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+      border-radius: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      flex-shrink: 0;
+    }
+
+    .featured-content {
+      flex: 1;
+    }
+
+    .featured-title {
+      font-family: 'Rubik', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .featured-meta {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .meta-pill {
+      padding: 0.25rem 0.75rem;
+      background: var(--surface-container);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .featured-xp {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.75rem;
+      background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-dark) 100%);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: var(--border);
+      border-radius: 9999px;
+      margin-bottom: 1rem;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--primary);
+      border-radius: 9999px;
+      transition: width 0.3s ease;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 0.75rem;
+      font-family: 'Rubik', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      border-bottom: 3px solid var(--primary-dark);
+      color: var(--white);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-light);
+    }
+
+    .btn-primary:active {
+      transform: translateY(2px);
+      border-bottom-width: 1.5px;
+    }
+
+    .course-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .course-card {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-bottom: 4px solid var(--border-dark);
+      border-radius: 1rem;
+      overflow: hidden;
+      transition: transform 0.2s ease;
+    }
+
+    .course-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .course-image {
+      height: 140px;
+      background: linear-gradient(135deg, var(--tertiary) 0%, var(--tertiary-dark) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+    }
+
+    .course-content {
+      padding: 1.25rem;
+    }
+
+    .course-title {
+      font-family: 'Rubik', sans-serif;
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .course-instructor {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.75rem;
+    }
+
+    .course-meta {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .course-xp {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--secondary);
+    }
+
+    .course-lessons {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .course-progress {
+      margin-bottom: 1rem;
+    }
+
+    .progress-text {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.25rem;
+    }
+
+    .btn-full {
+      width: 100%;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--white);
+      border-top: 2px solid var(--border);
+      padding: 0.75rem 1rem;
+      display: flex;
+      justify-content: space-around;
+      z-index: 100;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      font-weight: 600;
+      transition: color 0.2s ease;
+    }
+
+    .nav-item.active {
+      color: var(--primary);
+    }
+
+    .nav-icon {
+      font-size: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .featured-card {
+        flex-direction: column;
+      }
+
+      .featured-image {
+        width: 100%;
+        height: 120px;
+      }
+
+      .course-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .bottom-nav {
+        display: flex;
+      }
+
+      .container {
+        padding-bottom: 5rem;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .bottom-nav {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1 class="headline">Learning Library</h1>
+      <p class="supporting-text">Explore courses. Build skills. Earn XP.</p>
+    </div>
+
+    <div class="search-section">
+      <input type="text" class="search-bar" placeholder="Search courses...">
+    </div>
+
+    <div class="filters">
+      <button class="filter-pill active">All</button>
+      <button class="filter-pill">Programming</button>
+      <button class="filter-pill">Web Development</button>
+      <button class="filter-pill">AI</button>
+      <button class="filter-pill">Design</button>
+      <button class="filter-pill">Business</button>
+      <button class="filter-pill">Beginner</button>
+      <button class="filter-pill">Intermediate</button>
+      <button class="filter-pill">Advanced</button>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <span class="mascot-small">🤔</span>
+        <div>
+          <h2 class="section-title">Recommended For You</h2>
+          <p class="section-subtitle">Picked based on your learning progress</p>
+        </div>
+      </div>
+
+      <div class="featured-card">
+        <div class="featured-image">🐍</div>
+        <div class="featured-content">
+          <h3 class="featured-title">Python Fundamentals</h3>
+          <div class="featured-meta">
+            <span class="meta-pill">Beginner</span>
+            <span class="meta-pill">24 Lessons</span>
+            <span class="featured-xp">💎 +1200 XP</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 42%"></div>
+          </div>
+          <p class="progress-text">Progress: 42%</p>
+          <button class="btn btn-primary">Continue Learning</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <span class="mascot-small">📚</span>
+        <h2 class="section-title">Popular Courses</h2>
+      </div>
+
+      <div class="course-grid">
+        <div class="course-card">
+          <div class="course-image">🐍</div>
+          <div class="course-content">
+            <h3 class="course-title">Python Fundamentals</h3>
+            <p class="course-instructor">Dr. Sarah Chen</p>
+            <div class="course-meta">
+              <span class="course-xp">💎 +1200 XP</span>
+              <span class="course-lessons">24 lessons</span>
+            </div>
+            <div class="course-progress">
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 42%"></div>
+              </div>
+              <p class="progress-text">42% complete</p>
+            </div>
+            <button class="btn btn-primary btn-full">Continue</button>
+          </div>
+        </div>
+
+        <div class="course-card">
+          <div class="course-image">⚡</div>
+          <div class="course-content">
+            <h3 class="course-title">JavaScript Essentials</h3>
+            <p class="course-instructor">Mike Johnson</p>
+            <div class="course-meta">
+              <span class="course-xp">💎 +950 XP</span>
+              <span class="course-lessons">18 lessons</span>
+            </div>
+            <div class="course-progress">
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 0%"></div>
+              </div>
+              <p class="progress-text">Not started</p>
+            </div>
+            <button class="btn btn-primary btn-full">Start Course</button>
+          </div>
+        </div>
+
+        <div class="course-card">
+          <div class="course-image">🌐</div>
+          <div class="course-content">
+            <h3 class="course-title">Web Development Basics</h3>
+            <p class="course-instructor">Emma Wilson</p>
+            <div class="course-meta">
+              <span class="course-xp">💎 +1500 XP</span>
+              <span class="course-lessons">30 lessons</span>
+            </div>
+            <div class="course-progress">
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 15%"></div>
+              </div>
+              <p class="progress-text">15% complete</p>
+            </div>
+            <button class="btn btn-primary btn-full">Continue</button>
+          </div>
+        </div>
+
+        <div class="course-card">
+          <div class="course-image">🤖</div>
+          <div class="course-content">
+            <h3 class="course-title">AI Fundamentals</h3>
+            <p class="course-instructor">Dr. Alex Kumar</p>
+            <div class="course-meta">
+              <span class="course-xp">💎 +2000 XP</span>
+              <span class="course-lessons">36 lessons</span>
+            </div>
+            <div class="course-progress">
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 0%"></div>
+              </div>
+              <p class="progress-text">Not started</p>
+            </div>
+            <button class="btn btn-primary btn-full">Start Course</button>
+          </div>
+        </div>
+
+        <div class="course-card">
+          <div class="course-image">📊</div>
+          <div class="course-content">
+            <h3 class="course-title">Data Structures</h3>
+            <p class="course-instructor">Prof. Lisa Park</p>
+            <div class="course-meta">
+              <span class="course-xp">💎 +1800 XP</span>
+              <span class="course-lessons">28 lessons</span>
+            </div>
+            <div class="course-progress">
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 0%"></div>
+              </div>
+              <p class="progress-text">Not started</p>
+            </div>
+            <button class="btn btn-primary btn-full">Start Course</button>
+          </div>
+        </div>
+
+        <div class="course-card">
+          <div class="course-image">🎨</div>
+          <div class="course-content">
+            <h3 class="course-title">UI/UX Design</h3>
+            <p class="course-instructor">James Lee</p>
+            <div class="course-meta">
+              <span class="course-xp">💎 +1100 XP</span>
+              <span class="course-lessons">22 lessons</span>
+            </div>
+            <div class="course-progress">
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 0%"></div>
+              </div>
+              <p class="progress-text">Not started</p>
+            </div>
+            <button class="btn btn-primary btn-full">Start Course</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="/path" class="nav-item">
+      <span class="nav-icon">🛤️</span>
+      <span>Path</span>
+    </a>
+    <a href="/library" class="nav-item active">
+      <span class="nav-icon">📚</span>
+      <span>Library</span>
+    </a>
+    <a href="/class" class="nav-item">
+      <span class="nav-icon">👨‍🏫</span>
+      <span>Class</span>
+    </a>
+    <a href="/friends" class="nav-item">
+      <span class="nav-icon">👥</span>
+      <span>Friends</span>
+    </a>
+    <a href="/leaderboard" class="nav-item">
+      <span class="nav-icon">🏆</span>
+      <span>Ranks</span>
+    </a>
+    <a href="/profile" class="nav-item">
+      <span class="nav-icon">👤</span>
+      <span>Profile</span>
+    </a>
+  </nav>
+</body>
+</html>

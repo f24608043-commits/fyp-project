@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Results - LEGO Learn And Go</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&family=Nunito+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #22c55e;
+      --primary-dark: #15803d;
+      --primary-light: #4ade80;
+      --secondary: #f59e0b;
+      --secondary-dark: #d97706;
+      --tertiary: #3b82f6;
+      --tertiary-dark: #1d4ed8;
+      --surface: #faf8ff;
+      --surface-container: #eaedff;
+      --white: #ffffff;
+      --text-primary: #0f172a;
+      --text-secondary: #64748b;
+      --border: #e2e8f0;
+      --border-dark: #cbd5e1;
+      --error: #ef4444;
+      --success: #22c55e;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Nunito Sans', sans-serif;
+      background: linear-gradient(135deg, var(--surface) 0%, #f0fdf4 100%);
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .header {
+      margin-bottom: 2rem;
+    }
+
+    .search-bar {
+      width: 100%;
+      padding: 1rem 1.25rem;
+      border: 2px solid var(--border);
+      border-bottom: 4px solid var(--border-dark);
+      border-radius: 1rem;
+      font-family: 'Nunito Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      background: var(--white);
+      transition: all 0.2s ease;
+    }
+
+    .search-bar:focus {
+      outline: none;
+      border-color: var(--primary);
+      border-bottom-color: var(--primary-dark);
+    }
+
+    .results-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+    }
+
+    .results-count {
+      font-family: 'Rubik', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .mascot {
+      font-size: 2rem;
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .filter-pill {
+      padding: 0.5rem 1rem;
+      border: 2px solid var(--border);
+      border-bottom: 3px solid var(--border-dark);
+      border-radius: 9999px;
+      font-family: 'Rubik', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      background: var(--white);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .filter-pill:hover {
+      border-color: var(--tertiary);
+      border-bottom-color: var(--tertiary-dark);
+      color: var(--tertiary);
+    }
+
+    .filter-pill.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      border-bottom-color: var(--primary-dark);
+      color: var(--white);
+    }
+
+    .course-card {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-bottom: 4px solid var(--border-dark);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      display: flex;
+      gap: 1rem;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .course-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .course-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, var(--tertiary) 0%, var(--tertiary-dark) 100%);
+      border-radius: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      flex-shrink: 0;
+    }
+
+    .course-content {
+      flex: 1;
+    }
+
+    .course-title {
+      font-family: 'Rubik', sans-serif;
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .course-instructor {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.75rem;
+    }
+
+    .course-meta {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .course-xp {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.75rem;
+      background: var(--secondary);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    .no-results {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-bottom: 4px solid var(--border-dark);
+      border-radius: 1rem;
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+
+    .no-results-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+
+    .no-results-title {
+      font-family: 'Rubik', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .no-results-message {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--white);
+      border-top: 2px solid var(--border);
+      padding: 0.75rem 1rem;
+      display: flex;
+      justify-content: space-around;
+      z-index: 100;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      font-weight: 600;
+      transition: color 0.2s ease;
+    }
+
+    .nav-item.active {
+      color: var(--primary);
+    }
+
+    .nav-icon {
+      font-size: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .course-card {
+        flex-direction: column;
+      }
+
+      .course-icon {
+        width: 100%;
+        height: 100px;
+      }
+
+      .bottom-nav {
+        display: flex;
+      }
+
+      .container {
+        padding-bottom: 5rem;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .bottom-nav {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <input type="text" class="search-bar" placeholder="Search courses..." value="python">
+    </div>
+
+    <div class="results-header">
+      <div class="results-count">6 results found</div>
+      <span class="mascot">🔍</span>
+    </div>
+
+    <div class="filters">
+      <button class="filter-pill active">All</button>
+      <button class="filter-pill">Beginner</button>
+      <button class="filter-pill">Intermediate</button>
+      <button class="filter-pill">Advanced</button>
+      <button class="filter-pill">Programming</button>
+      <button class="filter-pill">Web Dev</button>
+    </div>
+
+    <div class="course-card">
+      <div class="course-icon">🐍</div>
+      <div class="course-content">
+        <div class="course-title">Python Fundamentals</div>
+        <div class="course-instructor">Dr. Sarah Chen</div>
+        <div class="course-meta">
+          <span class="meta-item">📊 Beginner</span>
+          <span class="meta-item">📚 24 lessons</span>
+          <span class="meta-item">⏱️ ~8 hours</span>
+        </div>
+        <span class="course-xp">💎 +1,200 XP</span>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <div class="course-icon">🤖</div>
+      <div class="course-content">
+        <div class="course-title">Python for Data Science</div>
+        <div class="course-instructor">Prof. Lisa Park</div>
+        <div class="course-meta">
+          <span class="meta-item">📊 Intermediate</span>
+          <span class="meta-item">📚 32 lessons</span>
+          <span class="meta-item">⏱️ ~12 hours</span>
+        </div>
+        <span class="course-xp">💎 +1,600 XP</span>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <div class="course-icon">🌐</div>
+      <div class="course-content">
+        <div class="course-title">Python Web Development</div>
+        <div class="course-instructor">Mike Johnson</div>
+        <div class="course-meta">
+          <span class="meta-item">📊 Intermediate</span>
+          <span class="meta-item">📚 28 lessons</span>
+          <span class="meta-item">⏱️ ~10 hours</span>
+        </div>
+        <span class="course-xp">💎 +1,400 XP</span>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <div class="course-icon">🧮</div>
+      <div class="course-content">
+        <div class="course-title">Python Algorithms</div>
+        <div class="course-instructor">Dr. Alex Kumar</div>
+        <div class="course-meta">
+          <span class="meta-item">📊 Advanced</span>
+          <span class="meta-item">📚 36 lessons</span>
+          <span class="meta-item">⏱️ ~14 hours</span>
+        </div>
+        <span class="course-xp">💎 +1,800 XP</span>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <div class="course-icon">🔧</div>
+      <div class="course-content">
+        <div class="course-title">Python Automation</div>
+        <div class="course-instructor">Emma Wilson</div>
+        <div class="course-meta">
+          <span class="meta-item">📊 Intermediate</span>
+          <span class="meta-item">📚 20 lessons</span>
+          <span class="meta-item">⏱️ ~6 hours</span>
+        </div>
+        <span class="course-xp">💎 +1,000 XP</span>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <div class="course-icon">🎮</div>
+      <div class="course-content">
+        <div class="course-title">Python Game Development</div>
+        <div class="course-instructor">James Lee</div>
+        <div class="course-meta">
+          <span class="meta-item">📊 Intermediate</span>
+          <span class="meta-item">📚 24 lessons</span>
+          <span class="meta-item">⏱️ ~9 hours</span>
+        </div>
+        <span class="course-xp">💎 +1,200 XP</span>
+      </div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="/path" class="nav-item">
+      <span class="nav-icon">🛤️</span>
+      <span>Path</span>
+    </a>
+    <a href="/library" class="nav-item active">
+      <span class="nav-icon">📚</span>
+      <span>Library</span>
+    </a>
+    <a href="/class" class="nav-item">
+      <span class="nav-icon">👨‍🏫</span>
+      <span>Class</span>
+    </a>
+    <a href="/friends" class="nav-item">
+      <span class="nav-icon">👥</span>
+      <span>Friends</span>
+    </a>
+    <a href="/leaderboard" class="nav-item">
+      <span class="nav-icon">🏆</span>
+      <span>Ranks</span>
+    </a>
+    <a href="/profile" class="nav-item">
+      <span class="nav-icon">👤</span>
+      <span>Profile</span>
+    </a>
+  </nav>
+</body>
+</html>
