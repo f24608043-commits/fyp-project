@@ -49,7 +49,7 @@ export const LessonButton = ({
   return (
     <Link
       href={href}
-      prefetch
+      prefetch={false}
       aria-disabled={locked}
       style={{ pointerEvents: locked ? "none" : "auto" }}
     >
@@ -62,10 +62,10 @@ export const LessonButton = ({
       >
         {current ? (
           <div className="relative h-[120px] w-[120px]">
-            <div className="absolute -top-8 left-1/2 -translate-x-1/2 z-10 animate-bounce rounded-2xl border-2 border-primary-500 bg-white px-4 py-2 font-heading font-bold uppercase tracking-wide text-primary-600 shadow-lg">
+            <div className="absolute -top-8 left-1/2 -translate-x-1/2 z-10 animate-bounce rounded-2xl border-2 border-green-500 bg-white px-4 py-2 font-bold uppercase tracking-wide text-green-600 shadow-lg border-b-4">
               Start
               <div
-                className="absolute -bottom-2 left-1/2 h-0 w-0 -translate-x-1/2 transform border-x-8 border-t-8 border-x-transparent border-t-primary-500"
+                className="absolute -bottom-2 left-1/2 h-0 w-0 -translate-x-1/2 transform border-x-8 border-t-8 border-x-transparent border-t-green-500"
                 aria-hidden
               />
             </div>
@@ -84,7 +84,7 @@ export const LessonButton = ({
             >
               <Button
                 size="rounded"
-                className="h-[80px] w-[80px] rounded-full bg-gradient-to-br from-primary-400 to-primary-600 text-white shadow-xl shadow-primary-200 border-4 border-white"
+                className="h-[80px] w-[80px] rounded-full bg-gradient-to-br from-green-400 to-green-600 text-white shadow-xl shadow-green-200 border-4 border-white border-b-6"
               >
                 <Icon className="h-10 w-10" />
               </Button>
@@ -94,12 +94,12 @@ export const LessonButton = ({
           <Button
             size="rounded"
             className={cn(
-              "h-[80px] w-[80px] rounded-full shadow-lg transition-all hover:scale-105",
+              "h-[80px] w-[80px] rounded-full shadow-lg transition-all hover:scale-105 border-4 border-b-6",
               locked
-                ? "bg-muted-200 text-muted-400 cursor-not-allowed"
+                ? "bg-slate-200 text-slate-400 cursor-not-allowed border-slate-300"
                 : isCompleted
-                ? "bg-success-500 text-white shadow-success-200"
-                : "bg-white text-primary-600 border-4 border-primary-200"
+                ? "bg-green-500 text-white shadow-green-200 border-green-600"
+                : "bg-white text-green-600 border-green-200"
             )}
           >
             {locked ? (

@@ -12,8 +12,9 @@ export default async function LibraryPage() {
   return (
     <div className="mx-auto h-full max-w-6xl px-4 pb-12 pt-6">
       <div className="mb-8 space-y-3">
-        <h1 className="text-4xl font-heading font-extrabold text-primary-900">Video Library</h1>
-        <p className="text-lg text-muted-foreground font-body">
+        <div className="text-5xl mb-2">📚</div>
+        <h1 className="text-4xl font-extrabold text-slate-800">Video Library</h1>
+        <p className="text-lg text-slate-500">
           Rewatch any lesson video ungated at your own pace. Exploring the library does not alter your path progress.
         </p>
       </div>

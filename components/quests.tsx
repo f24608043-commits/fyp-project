@@ -9,12 +9,16 @@ type QuestsProps = { points: number };
 
 export const Quests = ({ points }: QuestsProps) => {
   return (
-    <div className="space-y-4 rounded-xl border-2 p-4">
+    <div className="space-y-4 rounded-2xl border-2 border-slate-200 border-b-4 bg-white p-4 shadow-md">
       <div className="flex w-full items-center justify-between space-y-2">
-        <h3 className="text-lg font-bold">Quests</h3>
+        <h3 className="text-lg font-bold text-slate-800">🎯 Quests</h3>
 
-        <Link href="/quests" prefetch>
-          <Button size="sm" variant="primaryOutline">
+        <Link href="/quests" prefetch={false}>
+          <Button 
+            size="sm" 
+            variant="ghost"
+            className="rounded-xl font-bold text-green-600 hover:bg-green-50 border-2 border-transparent hover:border-green-200"
+          >
             View all
           </Button>
         </Link>
@@ -26,17 +30,17 @@ export const Quests = ({ points }: QuestsProps) => {
 
           return (
             <div
-              className="flex w-full items-center gap-x-3 pb-4"
+              className="flex w-full items-center gap-x-3 pb-4 border-b border-slate-100 last:border-0"
               key={quest.title}
             >
-              <Image src="/points.svg" alt="Points" width={40} height={40} />
+              <div className="text-4xl">⭐</div>
 
               <div className="flex w-full flex-col gap-y-2">
-                <p className="text-sm font-bold text-neutral-700">
+                <p className="text-sm font-bold text-slate-700">
                   {quest.title}
                 </p>
 
-                <Progress value={progress} className="h-2" />
+                <Progress value={progress} className="h-3 bg-slate-100" />
               </div>
             </div>
           );

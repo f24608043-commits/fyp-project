@@ -70,15 +70,16 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-80px)] p-4">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-2xl border-2 border-slate-200 shadow-sm">
+    <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gradient-to-br from-green-50 to-white">
+      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-2xl border-2 border-slate-200 border-b-4 shadow-lg">
         <div className="text-center space-y-2">
-          <h2 className="text-2xl font-bold tracking-tight text-neutral-700">Welcome Back</h2>
-          <p className="text-sm text-neutral-500">Sign in to continue your learning journey</p>
+          <div className="text-5xl mb-2">🧱</div>
+          <h2 className="text-3xl font-bold tracking-tight text-slate-800">Welcome Back</h2>
+          <p className="text-sm text-slate-500">Sign in to continue your learning journey</p>
         </div>
 
         {error && (
-          <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg">
+          <div className="p-3 text-sm text-red-600 bg-red-50 border-2 border-red-200 border-b-4 rounded-lg">
             {error}
           </div>
         )}
@@ -88,7 +89,7 @@ export default function SignInPage() {
           type="button"
           variant="ghost"
           size="lg"
-          className="w-full border-2 border-slate-200"
+          className="w-full border-2 border-slate-200 border-b-4 hover:border-green-400 hover:border-b-green-500 transition-all active:border-b-2 active:translate-y-[2px]"
           onClick={handleGoogleSignIn}
           disabled={googleLoading}
         >
@@ -101,31 +102,31 @@ export default function SignInPage() {
             <span className="w-full border-t border-slate-200" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-white px-2 text-muted-foreground">Or continue with email</span>
+            <span className="bg-white px-2 text-slate-400 font-semibold">Or continue with email</span>
           </div>
         </div>
 
         <form onSubmit={handleSignIn} className="space-y-4">
           <div>
-            <label className="block text-sm font-semibold text-neutral-600 mb-1">Email</label>
+            <label className="block text-sm font-bold text-slate-700 mb-1">Email</label>
             <input
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border-2 border-slate-200 rounded-xl focus:border-green-500 focus:outline-none"
+              className="w-full px-4 py-3 border-2 border-slate-200 border-b-4 rounded-xl focus:border-green-500 focus:border-b-green-600 focus:outline-none transition-all"
               placeholder="you@example.com"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-neutral-600 mb-1">Password</label>
+            <label className="block text-sm font-bold text-slate-700 mb-1">Password</label>
             <input
               type="password"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border-2 border-slate-200 rounded-xl focus:border-green-500 focus:outline-none"
+              className="w-full px-4 py-3 border-2 border-slate-200 border-b-4 rounded-xl focus:border-green-500 focus:border-b-green-600 focus:outline-none transition-all"
               placeholder="••••••••"
             />
           </div>
@@ -133,20 +134,25 @@ export default function SignInPage() {
           <div className="text-right">
             <Link
               href="/forgot-password"
-              className="text-sm text-primary-600 hover:underline font-semibold"
+              className="text-sm text-green-600 hover:text-green-700 hover:underline font-bold"
             >
               Forgot password?
             </Link>
           </div>
 
-          <Button type="submit" disabled={loading} size="lg" variant="secondary" className="w-full">
+          <Button 
+            type="submit" 
+            disabled={loading} 
+            size="lg" 
+            className="w-full bg-green-500 hover:bg-green-400 text-white font-bold border-2 border-green-600 border-b-4 active:border-b-2 active:translate-y-[2px] transition-all"
+          >
             {loading ? <Loader className="h-5 w-5 animate-spin" /> : "Sign In"}
           </Button>
         </form>
 
-        <div className="text-center text-sm text-neutral-500">
+        <div className="text-center text-sm text-slate-500">
           Don&apos;t have an account?{" "}
-          <Link href="/sign-up" className="font-bold text-green-600 hover:underline">
+          <Link href="/sign-up" className="font-bold text-green-600 hover:text-green-700 hover:underline">
             Sign up
           </Link>
         </div>
