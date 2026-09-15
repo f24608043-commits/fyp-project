@@ -124,6 +124,8 @@ lego-learn-and-go/
     |-- use-exit-modal.ts
     |-- use-hearts-modal.ts
     |-- use-practice-modal.ts
+  |- supabase/
+    |-- .temp/
   |- .env.example
   |- .env/.env.local
   |- .gitignore
@@ -142,6 +144,8 @@ lego-learn-and-go/
   |- proxy.ts
   |- skills-lock.json
   |- tailwind.config.ts
+  |- test-exit-criteria.ts
+  |- test.sql
   |- tsconfig.json
   |- vercel.ts
 ```
